@@ -36,5 +36,5 @@ Memgrind Testing:
 - Create an array of 120 pointers. Repeatedly make a random choice between allocating a 1-byte object and adding the pointer to the array and deallocating a previously allocated object 
   (if any), until you have allocated 120 times. Deallocate any remaining objects.
 - Use malloc() to allocate 120 1-byte objects, storing the pointers in an array, then use free() to deallocate every other object.
-Then allocate 1 120-byte object. This checks for memory fragmentation and if fragmented memory coaleces        // maybe not
+    Then allocate 1 120-byte object. This checks for memory fragmentation and if fragmented memory coaleces        // maybe not
 - Use malloc() to allocate maximum amount in memory array: 4096 bytes. use free() to deallocate (will be repeated 50 times)
