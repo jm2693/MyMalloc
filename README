@@ -12,6 +12,9 @@ Free should:
 - should only free specified chunk
 - should free entire chunk (not from the middle)
 - should automatically coalece 
+    - rids of previous headers 
+    - merge chunks to fill gaps to allow for bigger memory allocations 
+    - registers now empty spaces as free space
 
 Malloc checks:
 - Allocate something that is larger than memory array               //expect error
