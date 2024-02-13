@@ -2,14 +2,16 @@ Daniel Li       dal279
 Jason Merchan   jm2693
 
 Test plans: 
--mymalloc() should allocate memory
-    - should not allocate more when full
-    - should allocate without overlapping
-    - should only allocate specified size
--myfree() should free memory 
-    - should only free specified chunk
-    - should free entire chunk (not from the middle)
-    - should automatically coalece 
+
+Malloc should:
+- should not allocate more when full
+- should allocate without overlapping
+- should only allocate specified size
+
+Free should:
+- should only free specified chunk
+- should free entire chunk (not from the middle)
+- should automatically coalece 
 
 Malloc checks:
 - Allocate something that is larger than memory array               //expect error
