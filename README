@@ -2,11 +2,23 @@ Daniel Li       dal279
 Jason Merchan   jm2693
 
 Test plans: 
+-mymalloc() should allocate memory
+    - should not allocate more when full
+    - should allocate without overlapping
+    - should only allocate specified size
+-myfree() should free memory 
+    - should only free specified chunk
+    - should free entire chunk (not from the middle)
+    - should automatically coalece 
 
 Malloc checks:
-1)
+1.
 
 Free checks: 
-1) Free something that was not initialized through malloc       //expect error
-2) Free something that is not at the start of the chunk         //expect error
-3) Free something a second time                                 //expect error
+1. Free something that was not initialized through malloc       //expect error
+2. Free something that is not at the start of the chunk         //expect error
+3. Free something a second time                                 //expect error
+
+
+Memgrind Testing:
+1.
