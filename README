@@ -13,8 +13,9 @@ Free should:
 - should free entire chunk (not from the middle)
 - should automatically coalece 
     - rids of previous headers 
-    - merge chunks to fill gaps to allow for bigger memory allocations 
+    - merge adjacent chunks to fill gaps to allow for bigger memory allocations 
     - registers now empty spaces as free space
+- should deal with memory fragmentation // maybe not?
 
 Malloc checks:
 - Allocate something that is larger than memory array                               //expect error
@@ -34,3 +35,6 @@ Memgrind Testing:
 - Use malloc() to get 120 1-byte objects, storing the pointers in an array, then use free() to deallocate the chunks.
 - Create an array of 120 pointers. Repeatedly make a random choice between allocating a 1-byte object and adding the pointer to the array and deallocating a previously allocated object 
   (if any), until you have allocated 120 times. Deallocate any remaining objects.
+- Use malloc() to allocate 120 1-byte objects, storing the pointers in an array, then use free() to deallocate every other object.
+Then allocate 1 120-byte object. This checks for memory fragmentation and if fragmented memory coaleces        // maybe not
+- Use malloc() to allocate maximum amount in memory array: 4096 bytes. use free() to deallocate (will be repeated 50 times)
