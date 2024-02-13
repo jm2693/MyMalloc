@@ -26,4 +26,7 @@ Free checks:
 
 
 Memgrind Testing:
--
+-malloc() and immediately free() a 1-byte object, 120 times
+-Use malloc() to get 120 1-byte objects, storing the pointers in an array, then use free() to deallocate the chunks.
+-Create an array of 120 pointers. Repeatedly make a random choice between allocating a 1-byte object and adding the pointer to the array and deallocating a previously allocated object 
+ (if any), until you have allocated 120 times. Deallocate any remaining objects.
