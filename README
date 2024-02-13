@@ -12,12 +12,13 @@ Test plans:
     - should automatically coalece 
 
 Malloc checks:
--
+- Allocate something that is larger than memory array               //expect error
+- Allocate something that is larger than available space in array   //expect error
 
 Free checks: 
-- Free something that was not initialized through malloc       //expect error
-- Free something that is not at the start of the chunk         //expect error
-- Free something a second time                                 //expect error
+- Free something that was not initialized through malloc            //expect error
+- Free something that is not at the start of the chunk              //expect error
+- Free something a second time                                      //expect error
 
 
 Memgrind Testing:
