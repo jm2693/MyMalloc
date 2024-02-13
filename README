@@ -8,7 +8,5 @@ Malloc checks:
 
 Free checks: 
 1) Free something that was not initialized through malloc       //expect error
-
 2) Free something that is not at the start of the chunk         //expect error
-
 3) Free something a second time                                 //expect error
