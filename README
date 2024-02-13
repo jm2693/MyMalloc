@@ -14,11 +14,13 @@ Test plans:
 Malloc checks:
 - Allocate something that is larger than memory array               //expect error
 - Allocate something that is larger than available space in array   //expect error
+- Allocate something that fits in memory array capacity             //expect success
 
 Free checks: 
 - Free something that was not initialized through malloc            //expect error
 - Free something that is not at the start of the chunk              //expect error
 - Free something a second time                                      //expect error
+- Free something that has been allocated (only data allocated)      //expects success                        
 
 
 Memgrind Testing:
