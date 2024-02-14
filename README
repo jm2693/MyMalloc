@@ -22,6 +22,7 @@ Malloc checks:
 - Allocate something that is larger than available space in array                   //expect error
 - Allocate something that fits in memory array capacity                             //expect success
 - Allocate something that was deallocated (especially one that held max capacity)   //expect success 
+- What if you have a full memory and nothing can be freed, but you need to add 1 byte 
 
 Free checks: 
 - Free something that was not initialized through malloc                            //expect error
@@ -38,3 +39,4 @@ Memgrind Testing:
 - Use malloc() to allocate 120 1-byte objects, storing the pointers in an array, then use free() to deallocate every other object.
     Then allocate 1 120-byte object. This checks for memory fragmentation and if fragmented memory coaleces        // maybe not
 - Use malloc() to allocate maximum amount in memory array: 4096 bytes. use free() to deallocate (will be repeated 50 times)
+- If there is a free 24 bytes at the end of the array and the user only asks for an int or char or byte or anything =< 8 bytes, you will need a 8 byte header, 8 byte payload, but instead of creating a new header, it allocates the 8 bytes back to the own payload. ie 8-byte header, 16-byte paylaod. 
