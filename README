@@ -22,7 +22,7 @@ Malloc checks:
 - Allocate something that is larger than available space in array                   //expect error
 - Allocate something that fits in memory array capacity                             //expect success
 - Allocate something that was deallocated (especially one that held max capacity)   //expect success 
-- What if you have a full memory and nothing can be freed, but you need to add 1 byte 
+- Random edge case: try to allocate 0 bytes                                         //expect error 
 
 Free checks: 
 - Free something that was not initialized through malloc                            //expect error
