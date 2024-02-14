@@ -28,7 +28,8 @@ Free checks:
 - Free something that was not initialized through malloc                            //expect error
 - Free something that is not at the start of the chunk                              //expect error
 - Free something a second time                                                      //expect error
-- Free something that has been allocated (only data allocated)                      //expects success                        
+- Free something that has been allocated (only data allocated)                      //expects success         
+- only coalesce free adjacent chunks                  
 
 
 Memgrind Testing:
