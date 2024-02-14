@@ -41,3 +41,8 @@ Memgrind Testing:
     Then allocate 1 120-byte object. This checks for memory fragmentation and if fragmented memory coaleces        // maybe not
 - Use malloc() to allocate maximum amount in memory array: 4096 bytes. use free() to deallocate (will be repeated 50 times)
 - If there is a free 24 bytes at the end of the array and the user only asks for an int or char or byte or anything =< 8 bytes, you will need a 8 byte header, 8 byte payload, but instead of creating a new header, it allocates the 8 bytes back to the own payload. ie 8-byte header, 16-byte paylaod. 
+
+
+Runtime Choices:
+- added additional header to the beginning of the array with a pointer to the largest free chunk
+    this allows for O(1) avg time when allocated memory 
