@@ -2,7 +2,7 @@
 #include "mymalloc.h"
 
 #define MEMLENGTH 4096
-static char memory[MEMLENGTH];
+static double memory[MEMLENGTH];
 
 typedef struct memory_chunk {
     int size;                       // size of memory chunk (including header)
@@ -15,15 +15,6 @@ typedef struct memory_chunk {
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
 
-    int i = 0;
-    while(i == -1){
-        if(memory[i] == NULL){
-            
-        }
-        else i++;
-    }
-
-    return NULL;
 }
 
 
