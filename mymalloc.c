@@ -13,12 +13,18 @@ typedef struct memory_chunk {
 } memory_chunk;
 
 //malloc implementation 
-void *mymalloc(size_t size){
+void *mymalloc(size_t size, char *file, int line) {
+
     int i = 0;
     while(i != 4097){
 
     }
     return NULL;
+}
+
+
+void myfree(void *ptr, char *file, int line) {
+
 }
 
 
