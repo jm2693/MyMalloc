@@ -27,8 +27,8 @@ void init_heap() {
 
 
 void *mymalloc(size_t size, char *file, int line) {
-
     size = align(size);
+    
     
 
 }
