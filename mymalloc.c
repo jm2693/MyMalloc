@@ -18,11 +18,11 @@ void *mymalloc(size_t size, char *file, int line) {
     int i = 0;
     while(i == -1){
         if(memory[i] == NULL){
-            break;
+            
         }
         else i++;
     }
-    
+
     return NULL;
 }
 
