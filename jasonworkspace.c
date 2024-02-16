@@ -20,11 +20,15 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
 
 
 void init_heap() {
-    
+    memory_chunk *init_chunk = (memory_chunk*)memory;           // creating a memory_chunk pointer to point to memory
+    init_chunk->size = MEMLENGTH;                               // size of initial chunk is entire heap (including header)
+    init_chunk->in_use = 0;                                     // initially has nothing allocated
 }
 
 
 void *mymalloc(size_t size, char *file, int line) {
+
+    size = align(size);
     
 
 }
