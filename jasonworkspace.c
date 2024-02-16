@@ -14,9 +14,18 @@ typedef struct memory_chunk {
 
 } memory_chunk;
 
+size_t align(size_t size) {         // method to align everything as 8-byte aligned
+    return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
+}
+
+
+void init_heap() {
+    
+}
 
 
 void *mymalloc(size_t size, char *file, int line) {
+    
 
 }
 

@@ -2,7 +2,9 @@
 #include "mymalloc.h"
 
 #define MEMLENGTH 4096
-static double memory[MEMLENGTH];
+static double memory[MEMLENGTH];    // defines heap 
+
+
 
 typedef struct memory_chunk {
     int size;                       // size of memory chunk (including header)
@@ -12,8 +14,18 @@ typedef struct memory_chunk {
 
 } memory_chunk;
 
-//malloc implementation 
+size_t align(size_t size) {         // method to align everything as 8-byte aligned
+    return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
+}
+
+
+void init_heap() {
+    
+}
+
+
 void *mymalloc(size_t size, char *file, int line) {
+    
 
 }
 
@@ -21,5 +33,7 @@ void *mymalloc(size_t size, char *file, int line) {
 void myfree(void *ptr, char *file, int line) {
 
 }
+
+
 
 
