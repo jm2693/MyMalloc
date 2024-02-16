@@ -27,7 +27,7 @@ void init_heap() {
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
     size = align(size);                                         // ensures allignment 
-    char *heap_start = (char*)memory;                           // pointer to the start of memory for byte-width operations
+    char *heap = (char*)memory;                                 // pointer to the start of memory for byte-width operations
     
 }
 
