@@ -14,7 +14,11 @@ typedef struct memory_chunk {
 
 //malloc implementation 
 void *mymalloc(size_t size){
+    int i = 0;
+    while(i != 4097){
 
+    }
+    return NULL;
 }
 
 
