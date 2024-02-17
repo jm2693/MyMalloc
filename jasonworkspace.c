@@ -1,17 +1,17 @@
 #include <stdlib.h>
 #include "mymalloc.h"
 
-#define MEMLENGTH 4096
+#define MEMLENGTH 512               // size of array in doubles
 static double memory[MEMLENGTH];    // defines heap 
 
 
 
-typedef struct metadata {
+typedef struct metadata {           // a header where we will store our metadata
     size_t size;                    // size of memory chunk (including header)
     int in_use;                     // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
-    struct metadata *next;          // pointer to the next available free space 
+    struct metadata *next;          // pointer to the next available free space (more about this in README)
 
-} metadata;
+} metadata;                         // renamed it to metadata
 
 int get_size(metadata *ptr) {
     return ptr->size;
