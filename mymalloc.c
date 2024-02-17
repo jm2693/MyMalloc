@@ -8,8 +8,7 @@ static double memory[MEMLENGTH];
 typedef struct metaData{
     int size;                       // size of memory chunk (including header)
     int in_use;                     // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
-    struct metaData *next;          // pointer to the next available free space 
-
+    //struct metaData *next;          // pointer to the next available free space 
 } metaData;
 
 int get_size(metaData *ptr) {
@@ -34,7 +33,7 @@ void init_heap() {
 
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
-    if(size > MEMLENGTH || size <= 0){                      // checks if size is bigger than 512 or less than or equal to 0 
+    if(size > MEMLENGTH || size <= 0){                      // checks if size is bigger than 4096 bytes or less than or equal to 0 
         printf("Error: Invalid size\n");
         return NULL;
     }
@@ -42,6 +41,10 @@ void *mymalloc(size_t size, char *file, int line) {
     
     double *heap_ptr = memory;                                  // pointer to the start of memory  
     double *end_ptr = &memory[MEMLENGTH-1];                     // pointer to end of memory 
+
+    while (heap_ptr <= end_ptr) {                               // scans through entire heap array until it ends
+        
+    }
     
 }
 
