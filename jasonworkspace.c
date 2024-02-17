@@ -17,7 +17,6 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
     return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
-
 void init_heap() {
     metadata *init_chunk = (metadata*)memory;                   // creating a metadata pointer to point to memory
     init_chunk->size = MEMLENGTH-sizeof(metadata);              // size of initial chunk is entire heap (including header)
