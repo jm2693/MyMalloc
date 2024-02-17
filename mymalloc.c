@@ -4,13 +4,13 @@
 #define MEMLENGTH 512
 static double memory[MEMLENGTH];
 
-typedef struct memory_chunk {
+typedef struct metaData{
     int size;                       // size of memory chunk (including header)
     int in_use;                     // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
 
-    //struct memory_chunk *next;      // pointer to the next available free space 
+    //struct metaData *next;        // pointer to the next available free space 
 
-} memory_chunk;
+} metaData;
 
 
 size_t align(size_t size) {         // method to align everything as 8-byte aligned
@@ -19,7 +19,7 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
 
 
 void init_heap() {
-    memory_chunk *init_chunk = (memory_chunk*)memory;           // creating a memory_chunk pointer to point to memory
+    metaData *init_chunk = (metaData*)memory;                   // creating a metaData pointer to point to memory
     init_chunk->size = MEMLENGTH;                               // size of initial chunk is entire heap (including header)
     init_chunk->in_use = 0;                                     // initially has nothing allocated
 }
@@ -28,10 +28,11 @@ void init_heap() {
 void *mymalloc(size_t size, char *file, int line) {
     size = align(size);                                         // ensures allignment 
     char *heap = (char*)memory;                                 // pointer to the start of memory for byte-width operations
-    if(memory[0] == 0) init_heap();                             // checks if memory is initiazlied 
-    else{
-        
-    }
+    if(){                                         // checks if memory is initiazlied 
+
+    }                                  
+    else init_heap();                                           // if its not initialized, call init_heap() to initialize
+    
 
     
 }
