@@ -7,8 +7,7 @@ static double memory[MEMLENGTH];
 typedef struct metaData{
     int size;                       // size of memory chunk (including header)
     int in_use;                     // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
-
-    //struct metaData *next;        // pointer to the next available free space 
+    struct metaData *next;          // pointer to the next available free space 
 
 } metaData;
 
@@ -33,7 +32,7 @@ void *mymalloc(size_t size, char *file, int line) {
             printf("Error: Invalid size\n");
         }
         else{
-            
+
         }                   
 
     }                                  
