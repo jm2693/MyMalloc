@@ -12,19 +12,9 @@ typedef struct metaData{
 
 } metaData;
 
-int get_size(metaData *ptr) {
-    return ptr->size;               // return size of metadata+payload
-}
-
-size_t get_in_use(metaData *ptr) {
-    return ptr->in_use;                 // returns in_use flag
-}
-
-
 size_t align(size_t size) {         // method to align everything as 8-byte aligned
     return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
 }
-
 
 void init_heap() {
     metaData *init_chunk = (metaData*)memory;                   // creating a metadata pointer to point to memory
