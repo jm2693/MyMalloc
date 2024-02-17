@@ -12,6 +12,14 @@ typedef struct metaData{
 
 } metaData;
 
+int get_size(metaData *ptr) {
+    return ptr->size;               // return size of metadata+payload
+}
+
+size_t get_in_use(metaData *ptr) {
+    return ptr->in_use;                 // returns in_use flag
+}
+
 
 size_t align(size_t size) {         // method to align everything as 8-byte aligned
     return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
@@ -31,16 +39,9 @@ void *mymalloc(size_t size, char *file, int line) {
         return NULL;
     }
     size = align(size);                                         // ensures allignment 
-    char *heap = (char*)memory;                                 // pointer to the start of memory for byte-width operations
-    if(memory[0] != '/0'){                                      // checks if memory is initiazlied, proceeds to other checks and allocation 
-                 
-
-    }                                  
-    else{
-        init_heap();                                          // if its not initialized, call init_heap() to initialize
-        
-    } 
-
+    
+    double *heap_ptr = memory;                                  // pointer to the start of memory  
+    double *end_ptr = &memory[MEMLENGTH-1];                     // pointer to end of memory 
     
 }
 
@@ -48,17 +49,3 @@ void *mymalloc(size_t size, char *file, int line) {
 void myfree(void *ptr, char *file, int line) {
 
 }
-
-// int main(int argc, char *argv[]){
-//     unsigned char *ptr = (unsigned char*)memory;
-//     printf("First 8 bytes of memory:\n");
-
-//     for (int i = 0; i < 8; i++) {
-//         printf( ptr[i]);
-//     }
-
-//     printf("\n");
-
-//     return 0;
-
-// }
