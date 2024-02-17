@@ -4,6 +4,7 @@
 #define MEMLENGTH 512
 static double memory[MEMLENGTH];
 
+/*
 typedef struct metaData{
     int size;                       // size of memory chunk (including header)
     int in_use;                     // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
@@ -36,7 +37,7 @@ void *mymalloc(size_t size, char *file, int line) {
         }                   
 
     }                                  
-    else init_heap();   */                                        // if its not initialized, call init_heap() to initialize
+    else init_heap();                                          // if its not initialized, call init_heap() to initialize
     
 
     
@@ -46,7 +47,7 @@ void *mymalloc(size_t size, char *file, int line) {
 void myfree(void *ptr, char *file, int line) {
 
 }
-
+*/
 
 int main(int argc, char *argv[]){
     printf("%lf" , memory[0]);
