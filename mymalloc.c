@@ -49,5 +49,5 @@ void myfree(void *ptr, char *file, int line) {
 
 
 int main(int argc, char *argv[]){
-    printf("%ln" , memory[0]);
+    printf("%lf" , memory[0]);
 }
