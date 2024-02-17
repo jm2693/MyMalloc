@@ -28,7 +28,7 @@ void init_heap() {
 void *mymalloc(size_t size, char *file, int line) {
     size = align(size);                                         // ensures allignment 
     char *heap = (char*)memory;                                 // pointer to the start of memory for byte-width operations
-    if(memory[0] != '/0'){                                         // checks if memory is initiazlied 
+    if(memory[0] != '/0'){                                      // checks if memory is initiazlied 
         
     }                                  
     else init_heap();                                           // if its not initialized, call init_heap() to initialize
