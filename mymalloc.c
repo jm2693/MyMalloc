@@ -26,12 +26,13 @@ void init_heap() {
 
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
+    if(size > MEMLENGTH || size <= 0){                      // checks if size is bigger than 512 or less than or equal to 0 
+            printf("Error: Invalid size\n");
+    }
     size = align(size);                                         // ensures allignment 
     char *heap = (char*)memory;                                 // pointer to the start of memory for byte-width operations
     if(memory[0] != '/0'){                                      // checks if memory is initiazlied, proceeds to other checks and allocation 
-        if(size > MEMLENGTH || size <= 0){                      // checks if size is bigger than 512 or less than or equal to 0 
-            printf("Error: Invalid size\n");
-        }
+        
         else{
 
         }                   
