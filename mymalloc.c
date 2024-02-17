@@ -29,7 +29,7 @@ void init_heap() {
 void *mymalloc(size_t size, char *file, int line) {
     size = align(size);                                         // ensures allignment 
     char *heap = (char*)memory;                                 // pointer to the start of memory for byte-width operations
-    /*if(memory[0] != '/0'){                                      // checks if memory is initiazlied, proceeds to other checks and allocation 
+    if(memory[0] != '/0'){                                      // checks if memory is initiazlied, proceeds to other checks and allocation 
         if(size > MEMLENGTH || size <= 0){                      // checks if size is bigger than 512 or less than or equal to 0 
             printf("Error: Invalid size\n");
         }
@@ -50,6 +50,16 @@ void myfree(void *ptr, char *file, int line) {
 }
 */
 
-int main(int argc, char *argv[]){
-    printf("%lf" , memory[0]);
-}
+// int main(int argc, char *argv[]){
+//     unsigned char *ptr = (unsigned char*)memory;
+//     printf("First 8 bytes of memory:\n");
+
+//     for (int i = 0; i < 8; i++) {
+//         printf( ptr[i]);
+//     }
+
+//     printf("\n");
+
+//     return 0;
+
+// }

@@ -14,11 +14,11 @@ typedef struct metadata {           // a header where we will store our metadata
 } metadata;                         // renamed it to metadata
 
 int get_size(metadata *ptr) {
-    return ptr->size;
+    return ptr->size;               // return size of metadata+payload
 }
 
 size_t get_in_use(metadata *ptr) {
-    return ptr->in_use;
+    return ptr->in_use;                 // returns in_use flag
 }
 
 
@@ -28,8 +28,8 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
 
 
 void init_heap() {
-    metadata *init_chunk = (metadata*)memory;           // creating a metadata pointer to point to memory
-    init_chunk->size = MEMLENGTH-sizeof(metadata);                               // size of initial chunk is entire heap (including header)
+    metadata *init_chunk = (metadata*)memory;                   // creating a metadata pointer to point to memory
+    init_chunk->size = MEMLENGTH-sizeof(metadata);              // size of initial chunk is entire heap (including header)
     init_chunk->in_use = 0;                                     // initially has nothing allocated
 }
 
