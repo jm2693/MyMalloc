@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "mymalloc.h"
 
-#define MEMLENGTH 4096
+#define MEMLENGTH 
 static double memory[MEMLENGTH];
 
 typedef struct memory_chunk {
