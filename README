@@ -46,3 +46,17 @@ Memgrind Testing:
 Runtime Choices:
 - added additional header to the beginning of the array with a pointer to the largest free chunk
     this allows for O(1) avg time when allocated memory 
+
+mymalloc.c notes:
+- traverse the memory array linearly to find the next free space to allocate data 
+
+    typedef struct metaData:
+        - is a struct for the meta data 
+        - contains size of the data following 
+        - allocation is determined by 0 (not allocated) and 1 (allocated)
+    
+    get_size:
+        - gets size of metadata
+    
+    size_t get_in_use:
+        - 
