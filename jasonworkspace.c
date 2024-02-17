@@ -39,7 +39,8 @@ void *mymalloc(size_t size, char *file, int line) {
 
     size = align(size);                                         // ensures allignment 
 
-    char *heap_ptr = (char*)memory;                             // pointer to the start of memory    
+    double *heap_ptr = memory;                                  // pointer to the start of memory  
+    double *  
     // check to see if (metadata*)memory size is something and in use is 0
     // if yes allocate something
     // if no call init-heap
