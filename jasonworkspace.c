@@ -31,15 +31,13 @@ void *mymalloc(size_t size, char *file, int line) {
     size = align(size);                                         // ensures allignment 
 
     char *heap_ptr = (char*)memory;                             // pointer to the start of memory     
-    
-    
-
-    
 
 }
 
 
 void myfree(void *ptr, char *file, int line) {
+
+    if (ptr == NULL) return;                                    // needs to return an error statements
 
 }
 
