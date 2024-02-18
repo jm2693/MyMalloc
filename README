@@ -55,8 +55,14 @@ mymalloc.c notes:
         - contains size of the data following 
         - allocation is determined by 0 (not allocated) and 1 (allocated)
     
-    get_size:
-        - gets size of metadata
+    size_t align
+        - function that rounds the sizes of data to nearest multiple of 8 for alignment
     
-    size_t get_in_use:
-        - 
+    void init_heap()
+        - initializes the heap 
+        - creates a metaData pointer that points to start of heap 
+        - size is set to the MEMLENGTH (512) minus the headeer that was just initialized
+        - allocation set to 0 
+    
+    void *mymalloc
+        - first checks for whether the size is larger than MEMLENGTH and if value of size is 0  //returns error
