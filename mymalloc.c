@@ -22,8 +22,8 @@ typedef struct metadata{
 // }
 
 
-size_t align(size_t size) {         // method to align everything as 8-byte aligned
-    return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
+size_t align(size_t size) {                                     // method to align everything as 8-byte aligned
+    return (size+7) & ~7;                                       // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
 void init_heap() {
@@ -34,8 +34,8 @@ void init_heap() {
 
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
-    if(size > MEMLENGTH || size <= 0){                      // checks if size is bigger than 4096 bytes or less than or equal to 0 
-        printf("Error: Invalid size\n");
+    if(size > MEMLENGTH || size <= 0){                          // checks if size is bigger than 4096 bytes or less than or equal to 0 
+        printf("Error at %s:%d: Invalid size\n", file, line);;
         return NULL;
     }
     size = align(size);                                         // ensures allignment 
@@ -47,14 +47,17 @@ void *mymalloc(size_t size, char *file, int line) {
     while (start_ptr <= end_ptr) {                               // scans through entire heap array until it ends
         int *chunk = (int*)start_ptr;                            // points to start of memory on first run. int pointer to get metadata values
         metadata init;                                           // storing size and if in_use within metadata struct
-        init.size = chunk[0];
+        init.size = chunk[0];                                    
         init.in_use = chunk[1];
 
         if(init.size == 0 && init.in_use == 0) {                 // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
             chunk[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
             chunk[1] = 1;                                        // in_use = 1 to represent chunk being allocated
-        } else if (init.size != 0 && init.in_use != 0) {
-            chunk = chunk + init.size;
+        } 
+        else if (init.size >= size + 8 && init.in_use == 0) {         
+            chunk[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
+            chunk[1] = 1;                                        // in_use = 1 to represent chunk being allocated
+            
         }
     }
     
