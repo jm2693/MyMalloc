@@ -78,6 +78,13 @@ void myfree(void *ptr, char *file, int line) {
         init.size = chunk[0];                                    
         init.in_use = chunk[1];
 
-        if(init.in_use == 0 && (start_ptr + init.size + ))
+        if(init.in_use == 0 && (start_ptr + init.size + 8) == ptr){
+            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);
+            if(currentChunk[1] == 0){
+                printf("Error at %s:%d: Freed this already :(\n", file, line);
+                return;
+            }
+            
+        }
     }
 }
