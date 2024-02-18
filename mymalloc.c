@@ -26,11 +26,27 @@ size_t align(size_t size) {                                      // method to al
     return (size+7) & ~7;                                        // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
-void init_heap() {
-    metadata *init_chunk = (metadata*)memory;                    // creating a metadata pointer to point to memory
-    init_chunk->size = MEMLENGTH-sizeof(metadata);               // size of initial chunk is entire heap (including header)
-    init_chunk->in_use = 0;                                      // initially has nothing allocated
+void *next_chunk(metadata *current_header) {                                                        // passes the current header to find location of next header
+    char *next_ptr = (char*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
+    if (next_ptr-(char*)(MEMLENGTH+sizeof(metadata)) < 0) {                                         // if 
+        return (void*)next_ptr;                                                                     // returns a void pointer to the next header. Can be casted to metadata or int
+    }
+    return NULL;                                                                                    // if the next header ptr goes outside of the array it returns NULL
 }
+
+void init_next_chunk(int *current_header, size_t size) {       // takes ptr to current_header and size of (metadata+freespace)
+    int *next_header = next_chunk(current_header);             // uses next_chunk helper to get ptr to next chunk spot
+    if (next_header != NULL) {                                 // checks to see if next chunk would be within array heap
+        next_header[0] = size;                                 // sets first spot of header to be size
+        next_header[1] = 0;                                    // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
+    } 
+}
+
+//void init_heap() {
+    //metadata *init_chunk = (metadata*)memory;                    // creating a metadata pointer to point to memory
+    //init_chunk->size = MEMLENGTH-sizeof(metadata);               // size of initial chunk is entire heap (including header)
+    //init_chunk->in_use = 0;                                      // initially has nothing allocated
+//}
 
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
