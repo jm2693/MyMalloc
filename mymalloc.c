@@ -78,6 +78,6 @@ void myfree(void *ptr, char *file, int line) {
         init.size = chunk[0];                                    
         init.in_use = chunk[1];
 
-        if(init.in_use == 0 && )
+        if(init.in_use == 0 && (start_ptr + init.size + ))
     }
 }
