@@ -11,12 +11,17 @@ typedef struct metadata{
     //struct metadata *next;        // pointer to the next available free space  (not going with this method because increases memory usage by a lot and not necessary for small data sizes)
 } metadata;
 
-size_t align(size_t size) {                                     // method to align everything as 8-byte aligned
-    return (size+7) & ~7;                                       // uses addition and bitwise and to round up to nearest multiple of 8
+size_t align(size_t size) {         // method to align everything as 8-byte aligned
+    return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
-double *next_chunk(int *current_header) {                       // passes the current header to find location of next header
-    int offset = current_header + current_header[0];
+void *next_chunk(metadata *current_header) {                       // passes the current header to find location of next header
+    int *next_ptr = (int*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));
+    if (next_ptr-(MEMLENGTH+sizeof(metadata)) <= 0)
+
+}
+
+void init_next_chunk(int *current_header) {
 
 }
 
@@ -39,7 +44,7 @@ void *mymalloc(size_t size, char *file, int line) {
         chunk->chunk_size = curr_header[0];                                    
         chunk->in_use = curr_header[1];
 
-        if (chunk->chunk_size == 0 && chunk->in_use == 0) {           // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
+        if (chunk->chunk_size == 0 && chunk->in_use == 0) {     // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
             curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
             curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;                            // increment current pointer to one following start
@@ -53,7 +58,6 @@ void *mymalloc(size_t size, char *file, int line) {
             return payload;
             
         }
-        if ()
 
         start_ptr = next_chunk;
     }
