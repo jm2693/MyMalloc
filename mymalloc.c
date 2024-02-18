@@ -78,16 +78,16 @@ void myfree(void *ptr, char *file, int line) {
         init.size = chunk[0];                                    
         init.in_use = chunk[1];
 
-        if(init.in_use == 0 && (start_ptr + init.size + 8) == ptr){                      // 
-            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);
-            if(currentChunk[1] == 0){
-                printf("Error at %s:%d: Freed this already :(\n", file, line);
+        if(init.in_use == 0 && (start_ptr + init.size + 8) == ptr){                      // checks for if the data is not allocated and if address is the same as pointer
+            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to metadata of chunk being deallocated
+            if(currentChunk[1] == 0){                                                    // if it has been deallocated, give error message
+                printf("Error at %s:%d: Freed this already :(\n", file, line);           
                 return;
             }
             
         }
         
-        if(start_ptr + sizeof(metadata) == (char *)ptr){
+        if(start_ptr + sizeof(metadata) == (char *)ptr){                                // checks if the data is equal to the pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);
             if(currentChunk[1] == 0){
                 printf("Error at %s:%d: Freed this already :(\n", file, line);
