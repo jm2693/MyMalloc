@@ -35,7 +35,7 @@ void init_heap() {
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
     if(size > MEMLENGTH || size <= 0){                           // checks if size is bigger than 4096 bytes or less than or equal to 0 
-        printf("Error at %s:%d: Invalid size\n", file, line);;
+        printf("Error at %s:%d: Invalid size\n", file, line);
         return NULL;
     }
     size = align(size);                                          // ensures allignment 
@@ -68,12 +68,14 @@ void *mymalloc(size_t size, char *file, int line) {
 
 void myfree(void *ptr, char *file, int line) {
     char *start_ptr = (char *)memory;                            // casts pointers as char to read memory at byte level
-    char *end_ptr = (char *)(&memory[MEMLENGTH-1]);              //
+    char *end_ptr = (char *)(&memory[MEMLENGTH-1]);              // points to end of memory 
 
     while(start_ptr <= end_ptr){
-        int *chunk = (int*)start_ptr; 
+        int *chunk = (int*)start_ptr;                            // points to start of memory
         metadata init;                                           
         init.size = chunk[0];                                    
         init.in_use = chunk[1];
+
+        if(init.in_use == 0 && )
     }
 }
