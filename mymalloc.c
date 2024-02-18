@@ -67,5 +67,13 @@ void *mymalloc(size_t size, char *file, int line) {
 
 
 void myfree(void *ptr, char *file, int line) {
+    char *start_ptr = (char *)memory;
+    char *end_ptr = (char *)(&memory[MEMLENGTH-1]);
 
+    while(start_ptr <= end_ptr){
+        int *chunk = (int*)start_ptr; 
+        metadata init;                                           
+        init.size = chunk[0];                                    
+        init.in_use = chunk[1];
+    }
 }
