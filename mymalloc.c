@@ -86,7 +86,15 @@ void myfree(void *ptr, char *file, int line) {
             }
             
         }
-
         
+        if(start_ptr + sizeof(metadata) == (char *)ptr){
+            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);
+            if(currentChunk[1] == 0){
+                printf("Error at %s:%d: Freed this already :(\n", file, line);
+                return;
+            }
+        }
+        
+
     }
 }
