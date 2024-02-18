@@ -62,6 +62,8 @@ void *mymalloc(size_t size, char *file, int line) {
                                                                   
         }                                                        
     }
+    printf("Error at %s:%d: Not enough memory :(\n", file, line);
+    return NULL;
     
 }
 
