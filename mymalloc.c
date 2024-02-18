@@ -6,7 +6,7 @@
 static double memory[MEMLENGTH];
 
 typedef struct metadata{
-    int size;                       // size of memory chunk (including header)
+    int chunk_size;                       // size of memory chunk (including header)
     int in_use;                     // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
     //struct metadata *next;        // pointer to the next available free space  (not going with this method because increases memory usage by a lot and not necessary for small data sizes)
 } metadata;
@@ -50,33 +50,42 @@ void init_next_chunk(int *current_header, size_t size) {       // takes ptr to c
 
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
-    if(size > MEMLENGTH || size <= 0){                           // checks if size is bigger than 4096 bytes or less than or equal to 0 
-        printf("Error at %s:%d: Invalid size\n", file, line);
+    if(size > MEMLENGTH || size <= 0){                          // checks if size is bigger than 4096 bytes or less than or equal to 0 
+        printf("Error at %s:%d: Invalid size\n", file, line);   // error message
         return NULL;
     }
-    size = align(size);                                          // ensures allignment 
+    size = align(size);                                         // ensures allignment 
     
-    double *payload = NULL;
-    double *start_ptr = memory;                                  // pointer to the start of memory  
-    double *end_ptr = &memory[MEMLENGTH-1];                      // pointer to end of memory 
+    metadata *chunk = (metadata*)memory;                        // storing size and if in_use within metadata struct
+    double *payload = NULL;                                     // ptr to payload returned to client. initially points to nothing 
+    double *start_ptr = memory;                                 // pointer to the start of memory  
+    double *end_ptr = &memory[MEMLENGTH-1];                     // pointer to end of memory 
 
-    while (start_ptr <= end_ptr) {                               // scans through entire heap array until it ends
-        int *chunk = (int*)start_ptr;                            // points to start of memory on first run. int pointer to get metadata values
-        metadata init;                                           // storing size and if in_use within metadata struct
-        init.size = chunk[0];                                    
-        init.in_use = chunk[1];
+    while (start_ptr <= end_ptr) {                              // scans through entire heap array until it ends
+        int *curr_header = (int*)start_ptr;                     // points to start of memory on first run. int pointer to get metadata values                                      
+        chunk->chunk_size = curr_header[0];                                    
+        chunk->in_use = curr_header[1];
 
-        if(init.size == 0 && init.in_use == 0) {                 // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
-            chunk[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
-            chunk[1] = 1;                                        // in_use = 1 to represent chunk being allocated
-            payload = start_ptr + 1;                             // increment current pointer to one following start
+        if (chunk->chunk_size == 0 && chunk->in_use == 0) {     // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
+            curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
+            curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
+            payload = start_ptr + 2;                            // increment current pointer to one following start
+            // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
+            init_next_chunk(curr_header, (FILL_IN_SIZE_HERE));
+            return (void*)payload;
             
         } 
-        else if (init.size >= size + sizeof(metadata) && init.in_use == 0) {         
-            chunk[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
-            chunk[1] = 1;                                        // in_use = 1 to represent chunk being allocated
-                                                                  
-        }                                                        
+        if (chunk->chunk_size - size >= 0) {         
+            curr_header[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
+            curr_header[1] = 1;                                        // in_use = 1 to represent curr_header being allocated
+            payload = start_ptr + 2;
+            // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
+            init_next_chunk(curr_header, (FILL_IN_SIZE_HERE));
+            return (void*)payload;
+            
+        }
+
+        start_ptr = next_chunk;
     }
     printf("Error at %s:%d: Not enough memory :(\n", file, line);
     return NULL;
@@ -91,14 +100,18 @@ void myfree(void *ptr, char *file, int line) {
     while(start_ptr <= end_ptr){
         int *chunk = (int*)start_ptr;                                                    // points to start of memory
         metadata init;                                           
-        init.size = chunk[0];                                    
+        init.chunk_size = chunk[0];                                    
         init.in_use = chunk[1];
 
-        if(init.in_use == 0 && (start_ptr + init.size + 8) == ptr){                      // checks for if the data is not allocated and if address is the same as pointer
+        if(init.in_use == 0 && (start_ptr + init.chunk_size + 8) == ptr){                // checks for if the data is not allocated and if address is the same as pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to metadata of chunk being deallocated
             if(currentChunk[1] == 0){                                                    // if it has been deallocated, give error message
                 printf("Error at %s:%d: Freed this already :(\n", file, line);           
                 return;
+            }
+            int *nextChunk = next_chunk(currentChunk);
+            if(next_chunk != NULL && nextChunk[1] == 0){
+
             }
             
         }
