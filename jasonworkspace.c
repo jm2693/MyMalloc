@@ -23,11 +23,11 @@ void *next_chunk(metadata *current_header) {                                    
     return NULL;                                                                                    // if the next header ptr goes outside of the array it returns NULL
 }
 
-void init_next_chunk(int *current_header, size_t size) {
-    int *next_header = next_chunk(current_header);
-    if (next_header != NULL) {
-        next_header[0] = size;
-        next_header[1] = 0;
+void init_next_chunk(int *current_header, size_t size) {       // takes ptr to current_header and size of (metadata+freespace)
+    int *next_header = next_chunk(current_header);             // uses next_chunk helper to get ptr to next chunk spot
+    if (next_header != NULL) {                                 // checks to see if next chunk would be within array heap
+        next_header[0] = size;                                 // sets first spot of header to be size
+        next_header[1] = 0;                                    // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
     } 
 }
 
