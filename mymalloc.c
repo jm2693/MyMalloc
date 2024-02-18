@@ -40,7 +40,7 @@ void *mymalloc(size_t size, char *file, int line) {
     }
     size = align(size);                                         // ensures allignment 
     
-    double *curr_ptr = NULL;
+    double *payload = NULL;
     double *start_ptr = memory;                                 // pointer to the start of memory  
     double *end_ptr = &memory[MEMLENGTH-1];                     // pointer to end of memory 
 
@@ -53,10 +53,10 @@ void *mymalloc(size_t size, char *file, int line) {
         if(init.size == 0 && init.in_use == 0) {                 // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
             chunk[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
             chunk[1] = 1;                                        // in_use = 1 to represent chunk being allocated
-            curr_ptr = start_ptr + 1;                            // increment current pointer to one following start
+            payload = start_ptr + 1;                            // increment current pointer to one following start
             
         } 
-        else if (init.size >= size + 8 && init.in_use == 0) {         
+        else if (init.size >= size + sizeof(metadata) && init.in_use == 0) {         
             chunk[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
             chunk[1] = 1;                                        // in_use = 1 to represent chunk being allocated
             
