@@ -16,9 +16,11 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
 }
 
 void *next_chunk(metadata *current_header) {                       // passes the current header to find location of next header
-    int *next_ptr = (int*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));
-    if (next_ptr-(MEMLENGTH+sizeof(metadata)) <= 0)
-
+    char *next_ptr = (char*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));
+    if (next_ptr-(char*)(MEMLENGTH+sizeof(metadata)) < 0) {
+        return (void*)next_ptr;
+    }
+    return NULL;
 }
 
 void init_next_chunk(int *current_header) {
