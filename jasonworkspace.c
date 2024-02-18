@@ -15,23 +15,27 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
     return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
-void *next_chunk(metadata *current_header) {                       // passes the current header to find location of next header
-    char *next_ptr = (char*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));
-    if (next_ptr-(char*)(MEMLENGTH+sizeof(metadata)) < 0) {
-        return (void*)next_ptr;
+void *next_chunk(metadata *current_header) {                                                        // passes the current header to find location of next header
+    char *next_ptr = (char*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
+    if (next_ptr-(char*)(MEMLENGTH+sizeof(metadata)) < 0) {                                         // if 
+        return (void*)next_ptr;                                                                     // returns a void pointer to the next header. Can be casted to metadata or int
     }
-    return NULL;
+    return NULL;                                                                                    // if the next header ptr goes outside of the array it returns NULL
 }
 
-void init_next_chunk(int *current_header) {
-
+void init_next_chunk(int *current_header, size_t size) {
+    int *next_header = next_chunk(current_header);
+    if (next_header != NULL) {
+        next_header[0] = size;
+        next_header[1] = 0;
+    } 
 }
 
 
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
     if(size > MEMLENGTH || size <= 0){                          // checks if size is bigger than 4096 bytes or less than or equal to 0 
-        printf("Error at %s:%d: Invalid size\n", file, line);
+        printf("Error at %s:%d: Invalid size\n", file, line);   // error message
         return NULL;
     }
     size = align(size);                                         // ensures allignment 
@@ -49,14 +53,14 @@ void *mymalloc(size_t size, char *file, int line) {
         if (chunk->chunk_size == 0 && chunk->in_use == 0) {     // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
             curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
             curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
-            payload = start_ptr + 1;                            // increment current pointer to one following start
+            payload = start_ptr + 2;                            // increment current pointer to one following start
             return payload;
             
         } 
         if (chunk->chunk_size - size >= 0) {         
             curr_header[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
             curr_header[1] = 1;                                        // in_use = 1 to represent curr_header being allocated
-            payload = start_ptr + 1;
+            payload = start_ptr + 2;
             return payload;
             
         }
