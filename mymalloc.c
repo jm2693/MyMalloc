@@ -106,7 +106,7 @@ void myfree(void *ptr, char *file, int line) {
                 return;
             }
             int *nextChunk = next_chunk((metadata*)currentChunk);                        // set nextChunk to point to the next chunk of currentChunk
-            if(next_chunk != NULL && nextChunk[1] == 0){                                 // checks if there is a next chunk and if it is initialized 
+            if(nextChunk != NULL && nextChunk[1] == 0){                                 // 
                 mergeChunks((int *)start_ptr, nextChunk);                                // merge start and the next chunk (which would be empty)
             }
             mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));        // merge 
@@ -121,7 +121,7 @@ void myfree(void *ptr, char *file, int line) {
                 return;
             }
             int *nextChunk = next_chunk((metadata*)currentChunk);                                  
-            if(next_chunk != NULL && nextChunk[1] == 0){                                
+            if(nextChunk != NULL && nextChunk[1] == 0){                                
                 mergeChunks((int *)start_ptr, nextChunk);                               
             }
             currentChunk[1] = 0;                                                        // marks current chunk as deallocated
