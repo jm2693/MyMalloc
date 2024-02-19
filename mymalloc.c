@@ -79,7 +79,7 @@ void *mymalloc(size_t size, char *file, int line) {
         //} 
         if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
             if (start_ptr != NULL) {
-                start_ptr = next_chunk((int*)(start_ptr));          // NEED TO FIX
+                start_ptr = next_chunk((metadata*)(start_ptr));          // NEED TO FIX
             } else break;
         }
     }
