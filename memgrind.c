@@ -21,6 +21,10 @@ void test1() {
     }
 }
 
+void test2(){
+    void *memgrind_arr[4096];
+    memgrind_arr[0] = malloc(4099);
+}
 int main(int argc, char* argv[]) {
     test1();
 }
