@@ -42,6 +42,12 @@ void init_next_chunk(int *current_header, size_t size) {       // takes ptr to c
     } 
 }
 
+void mergeChunks(int* current_header, int* nextChunk){
+    int *next_header = next_chunk(current_header);
+    nextChunk[0] = 0;
+    nextChunk[1] = 0;
+}
+
 //void init_heap() {
     //metadata *init_chunk = (metadata*)memory;                    // creating a metadata pointer to point to memory
     //init_chunk->size = MEMLENGTH-sizeof(metadata);               // size of initial chunk is entire heap (including header)
@@ -111,9 +117,11 @@ void myfree(void *ptr, char *file, int line) {
             }
             int *nextChunk = next_chunk(currentChunk);
             if(next_chunk != NULL && nextChunk[1] == 0){
-
+                mergeChunks((int *)start_ptr, nextChunk);
             }
-            
+            mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));
+            ptr = NULL;
+            return;
         }
         
         if(start_ptr + sizeof(metadata) == (char *)ptr){                                // checks if the data is equal to the pointer
@@ -122,8 +130,20 @@ void myfree(void *ptr, char *file, int line) {
                 printf("Error at %s:%d: Freed this already :(\n", file, line);
                 return;
             }
+            int *nextChunk = next_chunk(currentChunk);
+            if(next_chunk != NULL && nextChunk[1] == 0){
+                mergeChunks((int *)start_ptr, nextChunk);
+            }
+            currentChunk[1] = 0;
+            ptr = NULL;
+            return;
         }
-        
 
+        start_ptr = (char *)next_chunk((int *)start_ptr);
+        if(start_ptr == NULL){
+            break;
+        }
     }
+    printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
+
 }
