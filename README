@@ -73,4 +73,17 @@ mymalloc.c notes:
 Official memgrind test cases:
 
 test1():
+ - allocates 1 byte 120 times and immediately deallocates it before the next allocation
+ - after that it should be able to allocate a large chunk as the memory should be free
+test2():
+ - allocates 1 byte 120 times and deallocates all the allocated bytes after all of them have been allocated 
+ - after that it should be able to allocate a large chunk as the memory should be free
+test3():
+ - 
+test4():
+ - try to allocate a size larger than memory, should give an error
+ - try to free 
+test5():
+ - 
+test6():
  - 
