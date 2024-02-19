@@ -82,8 +82,8 @@ void *mymalloc(size_t size, char *file, int line) {
             
         } 
         if (chunk->chunk_size - size >= 0) {         
-            curr_header[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
-            curr_header[1] = 1;                                        // in_use = 1 to represent curr_header being allocated
+            curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
+            curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 2;
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
             init_next_chunk(curr_header, (FILL_IN_SIZE_HERE));
@@ -109,38 +109,38 @@ void myfree(void *ptr, char *file, int line) {
         init.chunk_size = chunk[0];                                    
         init.in_use = chunk[1];
 
-        if(init.in_use == 0 && (start_ptr + init.chunk_size + 8) == ptr){                // checks for if the data is not allocated and if address is the same as pointer
+        if(init.in_use == 0 && (start_ptr + init.chunk_size + sizeof(metadata)) == ptr){ // checks for if the data is not allocated and if address is the same as pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to metadata of chunk being deallocated
             if(currentChunk[1] == 0){                                                    // if it has been deallocated, give error message
                 printf("Error at %s:%d: Freed this already :(\n", file, line);           
                 return;
             }
-            int *nextChunk = next_chunk(currentChunk);
-            if(next_chunk != NULL && nextChunk[1] == 0){
-                mergeChunks((int *)start_ptr, nextChunk);
+            int *nextChunk = next_chunk(currentChunk);                                   // 
+            if(next_chunk != NULL && nextChunk[1] == 0){                                 // checks if there is a next chunk and if it is initialized 
+                mergeChunks((int *)start_ptr, nextChunk);                                // 
             }
-            mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));
-            ptr = NULL;
+            mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));        // 
+            ptr = NULL;                                                                  // fully deallocated the ptr
             return;
         }
         
         if(start_ptr + sizeof(metadata) == (char *)ptr){                                // checks if the data is equal to the pointer
-            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);
+            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);              // 
             if(currentChunk[1] == 0){
                 printf("Error at %s:%d: Freed this already :(\n", file, line);
                 return;
             }
-            int *nextChunk = next_chunk(currentChunk);
-            if(next_chunk != NULL && nextChunk[1] == 0){
-                mergeChunks((int *)start_ptr, nextChunk);
+            int *nextChunk = next_chunk(currentChunk);                                  //
+            if(next_chunk != NULL && nextChunk[1] == 0){                                //
+                mergeChunks((int *)start_ptr, nextChunk);                               //
             }
-            currentChunk[1] = 0;
+            currentChunk[1] = 0;                                                        //
             ptr = NULL;
             return;
         }
 
-        start_ptr = (char *)next_chunk((int *)start_ptr);
-        if(start_ptr == NULL){
+        start_ptr = (char *)next_chunk((int *)start_ptr);                               //
+        if(start_ptr == NULL){                                                          //
             break;
         }
     }
