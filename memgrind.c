@@ -46,8 +46,8 @@ void test3() {
 
 void test4() {
     void *memgrind_arr[4096];
-    memgrind_arr[0] = malloc(4099);
-    free(memgrind_arr[0]);
+    memgrind_arr[0] = malloc(4099);                                     // trys to allocate a memory that's too large, return error 
+    free(memgrind_arr[0]);                                              // trys to free, should return error as it was not put into memory
 }
 
 
