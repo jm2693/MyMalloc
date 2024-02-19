@@ -69,7 +69,7 @@ void *mymalloc(size_t size, char *file, int line) {
             curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
             curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;
-            
+
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
             init_next_chunk(chunk, (chunk->chunk_size - size));
             return (void*)payload;
@@ -105,11 +105,11 @@ void myfree(void *ptr, char *file, int line) {
                 printf("Error at %s:%d: Freed this memory already :(\n", file, line);           
                 return;
             }
-            int *nextChunk = next_chunk(currentChunk);                                   // 
+            int *nextChunk = next_chunk(currentChunk);                                   // set nextChunk to point to the next chunk of currentChunk
             if(next_chunk != NULL && nextChunk[1] == 0){                                 // checks if there is a next chunk and if it is initialized 
-                mergeChunks((int *)start_ptr, nextChunk);                                // 
+                mergeChunks((int *)start_ptr, nextChunk);                                // merge start and the next chunk (which would be empty)
             }
-            mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));        // 
+            mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));        // merge 
             ptr = NULL;                                                                  // fully deallocated the ptr
             return;
         }
