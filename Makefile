@@ -1,7 +1,13 @@
 CC = gcc -Wall -Wvla -std=c99 -fsanitize=address
-RM = rm -f 
-MEMGRIND = memgrind 
-SRCS = mymalloc.c memgrind.c
-OBJECTS = $(SRCS:.c=.o)
+DEPS = mymalloc.h
+OBJECTS = mymalloc.o memgrind.o
 
+%.o: %.c $(DEPS)
+	$(CC) -c -g -o $@ $< $(CFLAGS)
 
+memgrind: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS)
+
+clean:
+    rm -f $(OBJ) memgrind
+	

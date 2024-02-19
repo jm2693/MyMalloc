@@ -3,11 +3,24 @@
 #include <string.h>
 #include <sys/time.h>
 #include "mymalloc.h"
+#ifndef DEBUG
+#define DEBUG 1
+#endif
 
 void test1() {
-    for(int i = 0; i < 120; i++) {              // will repeat 120 times
-        char *ptr = malloc(1);                  // allocating 1-byte 
-        free(ptr);                              // freeing memory
+    void *memgrind_arr[4096];                                           // a test array used to store pointers to allocated memory
+    for(int i = 0; i < 120; i++) {                                      // will repeat 120 times
+        memgrind_arr[i] = malloc(1);                                    // allocating malloc at a position in memgrind_arr for testing
+        if (DEBUG) {
+            printf("memory allocated at %p\n", &memgrind_arr[i]);       // printing malloc statement
+        } 
+        free(memgrind_arr[i]);                                          // freeing allocated memory
+        if (DEBUG) {
+            printf("memory freed at %p\n", &memgrind_arr[i]);           // printing free statement
+        }                       
     }
-    printf("MemClear?: %d\n", memCleared());  // Check if memory is cleared
-    }
+}
+
+int main(int argc, char* argv[]) {
+    test1();
+}
