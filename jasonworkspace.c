@@ -78,15 +78,3 @@ void *mymalloc(size_t size, char *file, int line) {
 void myfree(void *ptr, char *file, int line) {
 
 }
-
-
-
-
-// int get_size(metadata ptr) {
-//     metadata *get_size = &ptr;
-//     return get_size->size;               // return size of metadata+payload
-// }
-
-// size_t get_in_use(metadata *ptr) {
-//     return ptr->in_use;                 // returns in_use flag
-// }
