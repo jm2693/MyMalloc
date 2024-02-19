@@ -53,23 +53,23 @@ void *mymalloc(size_t size, char *file, int line) {
         if (chunk->chunk_size == 0 && chunk->in_use == 0) {     // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
             curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
             curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
-            payload = start_ptr + 2;                            // increment current pointer to one following start
+            payload = start_ptr + 1;                            // increment current pointer to one following start
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
-            init_next_chunk(curr_header, (FILL_IN_SIZE_HERE));
+            init_next_chunk(curr_header, (chunk->chunk_size - size));
             return (void*)payload;
             
         } 
         if (chunk->chunk_size - size >= 0) {         
             curr_header[0] = size + sizeof(metadata);                  // allocated size asked for plus size of its own header
             curr_header[1] = 1;                                        // in_use = 1 to represent curr_header being allocated
-            payload = start_ptr + 2;
+            payload = start_ptr + 1;
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
-            init_next_chunk(curr_header, (FILL_IN_SIZE_HERE));
+            init_next_chunk(curr_header, (chunk->chunk_size - size));
             return (void*)payload;
             
         }
 
-        start_ptr = next_chunk;
+        start_ptr = next_chunk((metadata*)(start_ptr));
     }
     
 }
