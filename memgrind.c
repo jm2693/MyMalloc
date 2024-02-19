@@ -52,6 +52,21 @@ void test4() {
     free(memgrind_arr[0]);                                              // trys to free, should return error as it was not put into memory
 }
 
+void test5(){
+    void *memgrind_arr[4096];
+    memgrind_arr[0] = malloc(0);                                        // trys to allocate a memory that's too large, return error 
+    free(memgrind_arr[0]);                                              // trys to free, should return error as it was not put into memory
+}
+
+void test6(){
+    void *memgrind_arr[4096];
+    memgrind_arr[0] = malloc(1000);
+    memgrind_arr[1] = malloc(1000);
+    memgrind_arr[2] = malloc(1000);
+    free(memgrind_arr[0]);
+    free(memgrind_arr[2]);
+    memgrind_arr[3] = malloc(2504);                                     // should fail
+}
 
 int main(int argc, char* argv[]) {
     for (int i = 0; i < 50; i++) {
