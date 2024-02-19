@@ -115,17 +115,17 @@ void myfree(void *ptr, char *file, int line) {
         }
         
         if(start_ptr + sizeof(metadata) == (char *)ptr){                                // checks if the data is equal to the pointer
-            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);              // 
+            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);              // points to curretn chunk
             if(currentChunk[1] == 0){
                 printf("Error at %s:%d: Freed this memory already :(\n", file, line);
                 return;
             }
-            int *nextChunk = next_chunk(currentChunk);                                  //
-            if(next_chunk != NULL && nextChunk[1] == 0){                                //
-                mergeChunks((int *)start_ptr, nextChunk);                               //
+            int *nextChunk = next_chunk(currentChunk);                                  
+            if(next_chunk != NULL && nextChunk[1] == 0){                                
+                mergeChunks((int *)start_ptr, nextChunk);                               
             }
-            currentChunk[1] = 0;                                                        //
-            ptr = NULL;
+            currentChunk[1] = 0;                                                        // marks current chunk as deallocated
+            ptr = NULL;                                                                 // deallocates ptr
             return;
         }
 
