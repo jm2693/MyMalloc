@@ -6,28 +6,28 @@
 static double memory[MEMLENGTH];
 
 typedef struct metadata{
-    int chunk_size;                       // size of memory chunk (including header)
+    int chunk_size;                 // size of memory chunk (including header)
     int in_use;                     // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
     //struct metadata *next;        // pointer to the next available free space  (not going with this method because increases memory usage by a lot and not necessary for small data sizes)
 } metadata;
 
-size_t align(size_t size) {                                      // method to align everything as 8-byte aligned
-    return (size+7) & ~7;                                        // uses addition and bitwise and to round up to nearest multiple of 8
+size_t align(size_t size) {         // method to align everything as 8-byte aligned
+    return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
 void *next_chunk(metadata *current_header) {                                                        // passes the current header to find location of next header
     char *next_ptr = (char*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
-    if (next_ptr-(char*)(&memory[MEMLENGTH-1]) < 0) {                                         // if 
+    if (next_ptr-(char*)(&memory[MEMLENGTH-1]) < 0) {                                               // if 
         return (void*)next_ptr;                                                                     // returns a void pointer to the next header. Can be casted to metadata or int
     }
     return NULL;                                                                                    // if the next header ptr goes outside of the array it returns NULL
 }
 
-void init_next_chunk(metadata *current_header, size_t size) {       // takes ptr to current_header and size of (metadata+freespace)
-    int *next_header = (int*)(next_chunk(current_header));             // uses next_chunk helper to get ptr to next chunk spot
-    if (next_header != NULL) {                                 // checks to see if next chunk would be within array heap
-        next_header[0] = size;                                 // sets first spot of header to be size
-        next_header[1] = 0;                                    // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
+void init_next_chunk(metadata *current_header, size_t size) {   // takes ptr to current_header and size of (metadata+freespace)
+    int *next_header = (int*)(next_chunk(current_header));      // uses next_chunk helper to get ptr to next chunk spot
+    if (next_header != NULL) {                                  // checks to see if next chunk would be within array heap
+        next_header[0] = size;                                  // sets first spot of header to be size
+        next_header[1] = 0;                                     // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
     } 
 }
 
@@ -60,6 +60,7 @@ void *mymalloc(size_t size, char *file, int line) {
             curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
             curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;                            // increment current pointer to one following start
+
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
             init_next_chunk(chunk, (chunk->chunk_size - size));
             return (void*)payload;
@@ -68,6 +69,7 @@ void *mymalloc(size_t size, char *file, int line) {
             curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
             curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;
+            
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
             init_next_chunk(chunk, (chunk->chunk_size - size));
             return (void*)payload;
