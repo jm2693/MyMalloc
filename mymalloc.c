@@ -123,10 +123,10 @@ void myfree(void *ptr, char *file, int line) {
             return;
         }
 
-        start_ptr = (char *)next_chunk((int *)start_ptr);                               //
-        if(start_ptr == NULL){                                                          //
-            break;
-        }
+        int *nextChunk = next_chunk((int*)(start_ptr));
+        if (nextChunk != NULL) {
+            start_ptr = (char*)nextChunk;
+        } else break;
     }
     printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
 
