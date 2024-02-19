@@ -64,18 +64,18 @@ void *mymalloc(size_t size, char *file, int line) {
             init_next_chunk(curr_header, (chunk->chunk_size - size));
             return (void*)payload;
             
-        } 
-        if (chunk->chunk_size - size >= 0) {         
+        } if (chunk->chunk_size - (size + sizeof(metadata)) >= 0) {         
             curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
             curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
             init_next_chunk(curr_header, (chunk->chunk_size - size));
             return (void*)payload;
-            
+        } if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
+            if (start_ptr != NULL) {
+                start_ptr = next_chunk((int*)(start_ptr));          // NEED TO FIX
+            } else break;
         }
-
-        start_ptr = next_chunk;
     }
     printf("Error at %s:%d: Not enough memory :(\n", file, line);
     return NULL;
