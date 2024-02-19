@@ -19,6 +19,7 @@ void test1() {
             printf("memory freed at %p\n", &memgrind_arr[i]);           // printing free statement
         }                       
     }
+    memgrind_arr[18] = malloc(4050);                                    // should be able to be allocated 
 }
 
 void test2() {
@@ -35,11 +36,12 @@ void test2() {
             printf("memory freed at %p\n", &memgrind_arr[i]);           // printing free statement
         } 
     }
+    memgrind_arr[18] = malloc(4050);                                    // should be able to be allocated 
 }
 
 void test3() {
     void *memgrind_arr[120];
-    
+
 
 
 }
