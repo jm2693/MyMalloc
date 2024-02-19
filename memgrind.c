@@ -47,6 +47,7 @@ void test3() {
 void test4() {
     void *memgrind_arr[4096];
     memgrind_arr[0] = malloc(4099);
+    free(memgrind_arr[0]);
 }
 
 
