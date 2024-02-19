@@ -17,7 +17,7 @@ size_t align(size_t size) {                                      // method to al
 
 void *next_chunk(metadata *current_header) {                                                        // passes the current header to find location of next header
     char *next_ptr = (char*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
-    if (next_ptr-(char*)(MEMLENGTH+sizeof(metadata)) < 0) {                                         // if 
+    if (next_ptr-(char*)(&memory[MEMLENGTH-1]) < 0) {                                         // if 
         return (void*)next_ptr;                                                                     // returns a void pointer to the next header. Can be casted to metadata or int
     }
     return NULL;                                                                                    // if the next header ptr goes outside of the array it returns NULL
@@ -71,7 +71,11 @@ void *mymalloc(size_t size, char *file, int line) {
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
             init_next_chunk(chunk, (chunk->chunk_size - size));
             return (void*)payload;
-        } if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
+        } 
+        //if (chunk->chunk_size - (size + sizeof(metadata)) == sizeof(metadata)) {
+            
+        //} 
+        if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
             if (start_ptr != NULL) {
                 start_ptr = next_chunk((int*)(start_ptr));          // NEED TO FIX
             } else break;
@@ -129,5 +133,4 @@ void myfree(void *ptr, char *file, int line) {
         } else break;
     }
     printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
-
 }
