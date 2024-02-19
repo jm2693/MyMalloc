@@ -105,7 +105,7 @@ void myfree(void *ptr, char *file, int line) {
                 printf("Error at %s:%d: Freed this memory already :(\n", file, line);           
                 return;
             }
-            int *nextChunk = next_chunk(currentChunk);                                   // set nextChunk to point to the next chunk of currentChunk
+            int *nextChunk = next_chunk((metadata*)currentChunk);                        // set nextChunk to point to the next chunk of currentChunk
             if(next_chunk != NULL && nextChunk[1] == 0){                                 // checks if there is a next chunk and if it is initialized 
                 mergeChunks((int *)start_ptr, nextChunk);                                // merge start and the next chunk (which would be empty)
             }
@@ -120,7 +120,7 @@ void myfree(void *ptr, char *file, int line) {
                 printf("Error at %s:%d: Freed this memory already :(\n", file, line);
                 return;
             }
-            int *nextChunk = next_chunk(currentChunk);                                  
+            int *nextChunk = next_chunk((metadata*)currentChunk);                                  
             if(next_chunk != NULL && nextChunk[1] == 0){                                
                 mergeChunks((int *)start_ptr, nextChunk);                               
             }
@@ -129,7 +129,7 @@ void myfree(void *ptr, char *file, int line) {
             return;
         }
 
-        int *nextChunk = next_chunk((int*)(start_ptr));
+        int *nextChunk = next_chunk((metadata*)(start_ptr));
         if (nextChunk != NULL) {
             start_ptr = (char*)nextChunk;
         } else break;
