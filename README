@@ -66,3 +66,11 @@ mymalloc.c notes:
     
     void *mymalloc
         - first checks for whether the size is larger than MEMLENGTH and if value of size is 0  //returns error
+
+
+
+
+Official memgrind test cases:
+
+test1():
+ - 
