@@ -19,7 +19,8 @@ void test1() {
             printf("memory freed at %p\n", &memgrind_arr[i]);           // printing free statement
         }                       
     }
-    memgrind_arr[18] = malloc(4050);                                    // should be able to be allocated 
+    memgrind_arr[18] = malloc(1000);                                    // should be able to be allocated 
+    printf("memory allocated at %p\n", &memgrind_arr[18]);
 }
 
 void test2() {
@@ -39,10 +40,18 @@ void test2() {
     memgrind_arr[18] = malloc(4050);                                    // should be able to be allocated 
 }
 
+// void test3() {
+//     void *memgrind_arr[120];
+//     while 
+
+
+
+// }
 void test3() {
-    void *memgrind_arr[120];
-
-
+    void* ptr = malloc(1);
+    printf("memory allocated at %p\n", ptr); 
+    ptr = malloc(3);
+    printf("memory allocated at %p\n", ptr); 
 
 }
 
@@ -69,9 +78,11 @@ void test6(){
 }
 
 int main(int argc, char* argv[]) {
+
     for (int i = 0; i < 50; i++) {
-        test1();
-        test2();
-        test3();
+    test1();
+        //test1();
+        //test2();
+        //test3();
     }
 }
