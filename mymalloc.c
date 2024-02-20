@@ -81,9 +81,10 @@ void *mymalloc(size_t size, char *file, int line) {
             
         //} 
 
-        else if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
+        if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
             if (start_ptr != NULL) {
-                start_ptr = next_chunk((metadata*)(start_ptr));     
+                start_ptr = next_chunk((metadata*)(start_ptr));    
+                 printf("returning address of %p\n", start_ptr);
             } else break;
         }
     }
