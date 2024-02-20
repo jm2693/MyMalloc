@@ -63,3 +63,27 @@ void test5() {                          // tries to free something that was not 
     void* ptr;
     free(ptr);
 }
+
+
+int main(int argc, char* argv[]) {
+
+    test1();
+    test2();
+    test3();
+    test4();
+    test5();
+
+    // for (int i = 0; i < 50; i++) {
+    //     // test6();
+    //     //test3();
+    // }
+    // char* arr[5];
+    // arr[1] = malloc(1);
+    // printf("mem allocated at %p\n", arr[1]);
+    // arr[2] = malloc(2);
+    // printf("mem allocated at %p\n", arr[2]);
+    // free(arr[1]);
+    // printf("mem deallocated at %p\n", arr[1]);
+    // free(arr[2]);
+    // printf("mem deallocated at %p\n", arr[2]);
+}
