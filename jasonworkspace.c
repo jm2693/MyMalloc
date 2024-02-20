@@ -144,7 +144,7 @@ void myfree(void *ptr, char *file, int line) {
             return;
         }
 
-        int *nextChunk = next_chunk((metadata*)(start_ptr));
+        int *nextChunk = next_chunk((int*)(start_ptr));
         if (nextChunk != NULL) {
             start_ptr = (char*)nextChunk;
         } else break;
