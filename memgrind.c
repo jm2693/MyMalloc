@@ -84,17 +84,17 @@ void test6(){
 int main(int argc, char* argv[]) {
 
     //test2();
-    for (int i = 0; i < 50; i++) {
+    /*for (int i = 0; i < 50; i++) {
         test1();
         //test3();
-    }
-    // char* arr[5];
-    // arr[1] = malloc(1);
-    // printf("mem allocated at %p\n", arr[1]);
-    // arr[2] = malloc(2);
-    // printf("mem allocated at %p\n", arr[2]);
-    // free(arr[1]);
-    // printf("mem deallocated at %p\n", arr[1]);
-    // free(arr[2]);
-    // printf("mem deallocated at %p\n", arr[2]);
+    }*/
+    char* arr[5];
+    arr[1] = malloc(1);
+    printf("mem allocated at %p\n", arr[1]);
+    arr[2] = malloc(2);
+    printf("mem allocated at %p\n", arr[2]);
+    free(arr[1]);
+    printf("mem deallocated at %p\n", arr[1]);
+    free(arr[2]);
+    printf("mem deallocated at %p\n", arr[2]);
 }
