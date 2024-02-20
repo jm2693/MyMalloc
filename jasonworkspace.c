@@ -80,7 +80,7 @@ void *mymalloc(size_t size, char *file, int line) {
             //printf("returning 2 address of %p\n", payload);
 
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
-            init_next_chunk(curr_header, (chunk->chunk_size - size));
+            init_next_chunk(curr_header, (chunk->chunk_size - (size + sizeof(metadata))));
             return (void*)payload;
         } 
 
