@@ -16,7 +16,7 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
 }
 
 void *next_chunk(int *current_header) {                                                        // passes the current header to find location of next header
-    char *next_ptr = (char*)(current_header + (current_header[0])/(sizeof(metadata)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
+    char *next_ptr = (char*)(current_header + (current_header[0])/(sizeof(int)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
     if (next_ptr <= (char*)(&memory[MEMLENGTH-1])) {                                                // if 
         return (void*)next_ptr;                                                                     // returns a void pointer to the next header. Can be casted to metadata or int
     }
@@ -117,7 +117,7 @@ void myfree(void *ptr, char *file, int line) {
                 printf("Error at %s:%d: Freed this 2 memory already :(\n", file, line);           
                 return;
             }
-            int *nextChunk = next_chunk((metadata*)currentChunk);                          // set nextChunk to point to the next chunk of currentChunk
+            int *nextChunk = next_chunk(currentChunk);                          // set nextChunk to point to the next chunk of currentChunk
             if(nextChunk != NULL && nextChunk[1] == 0){                                    // 
                 mergeChunks((int *)start_ptr, nextChunk);                                  // merge start and the next chunk (which would be empty)
             }
@@ -134,7 +134,7 @@ void myfree(void *ptr, char *file, int line) {
                 printf("Error at %s:%d: Freed this 1 memory already :(\n", file, line); 
                 return;
             }
-            int *nextChunk = next_chunk((metadata*)currentChunk);                                  
+            int *nextChunk = next_chunk(currentChunk);                                  
             if(nextChunk != NULL && nextChunk[1] == 0){                                
                 mergeChunks((int *)start_ptr, nextChunk);                               
             }
@@ -144,7 +144,7 @@ void myfree(void *ptr, char *file, int line) {
             return;
         }
 
-        int *nextChunk = next_chunk((metadata*)(start_ptr));
+        int *nextChunk = next_chunk((int*)(start_ptr));
         if (nextChunk != NULL) {
             start_ptr = (char*)nextChunk;
         } else break;
