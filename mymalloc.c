@@ -66,7 +66,8 @@ void *mymalloc(size_t size, char *file, int line) {
             init_next_chunk(chunk, (chunk->chunk_size - size));
             return (void*)payload;
             
-        } else if (chunk->chunk_size - (size + sizeof(metadata)) >= 0) {         
+        } 
+        if (chunk->chunk_size - (size + sizeof(metadata)) >= 0) {         
             chunk->chunk_size = size + sizeof(metadata);        // allocated size asked for plus size of its own header
             chunk->in_use = 1;                                  // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;
@@ -119,7 +120,7 @@ void myfree(void *ptr, char *file, int line) {
             return;
         }
         
-        else if(start_ptr + sizeof(metadata) == (char*)ptr){                             // checks if the data is equal to the pointer
+        if(start_ptr + sizeof(metadata) == (char*)ptr){                             // checks if the data is equal to the pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to current chunk
             if(currentChunk[1] == 0){
                 
