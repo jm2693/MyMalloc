@@ -16,7 +16,7 @@ size_t align(size_t size) {                 // method to align everything as 8-b
     return (size+7) & ~7;                   // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
-void *find_next_chunk(int* current) {
+void *find_next_chunk(int* current) {                                                       // takes current beginning of chunk and 
     int* nextChunk = (int *)(current + current[0]/sizeof(int));
     if(nextChunk <= (int *)(&memory[MEMLENGTH - (sizeof(metadata)/sizeof(double))])) {
         return (void *)nextChunk;
@@ -45,7 +45,7 @@ void merge_chunks(int* current_chunk, int* next_chunk) {
 
 void *mymalloc(size_t size, char* file, int line) {
     size = align(size);                                                         // ensures allignment 
-    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){          // checks if size is bigger than 4096 bytes or less than or equal to 0 
+    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){           // checks if size is bigger than 4096 bytes or less than or equal to 0 
         printf("Error at %s:%d: Invalid size\n", file, line);                   // error message
         return NULL;
     }
@@ -130,8 +130,4 @@ void myfree(void* ptr, char* file, int line) {
         }
     }
     printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
-    return;
 }
-
-
-
