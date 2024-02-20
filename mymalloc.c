@@ -115,7 +115,7 @@ void myfree(void *ptr, char *file, int line) {
         }
         
         if(start_ptr + sizeof(metadata) == (char *)ptr){                                 // checks if the data is equal to the pointer
-            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to curretn chunk
+            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to current chunk
             if(currentChunk[1] == 0){
                 
                 printf("Error at %s:%d: Freed this 1 memory already :(\n", file, line); 
