@@ -7,7 +7,7 @@
 #define DEBUG 1
 #endif
 
-void test1() {
+void testA() {
     void *memgrind_arr[120];                                           // a test array used to store pointers to allocated memory
     for (int i = 0; i < 120; i++) {                                      // will repeat 120 times
         memgrind_arr[i] = malloc(1);                                    // allocating malloc at a position in memgrind_arr for testing
@@ -25,7 +25,7 @@ void test1() {
     printf("memory freed at %p\n", memgrind_arr[18]);           // printing free statement
 }
 
-void test2() {
+void testB() {
     void *memgrind_arr[120];
     for (int i = 0; i < 120; i++) {
         memgrind_arr[i] = malloc(1);
@@ -43,7 +43,7 @@ void test2() {
 }
 
 
-void test3() {
+void testC() {
     void* memgrind_arr[120];
         int allocated_count = 0;
         srand(time(NULL)); // Seed for random number generator
@@ -79,7 +79,7 @@ void test3() {
 
 
 
-int main(int argc, char* argv[]) {
+int main1(int argc, char* argv[]) {
 
     //test1();
     //test2();
@@ -103,4 +103,6 @@ int main(int argc, char* argv[]) {
     // printf("mem deallocated at %p\n", arr[1]);
     // free(arr[2]);
     // printf("mem deallocated at %p\n", arr[2]);
+    testA();
+    return 0;
 }

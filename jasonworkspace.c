@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "mymalloc.h"
+#ifndef DEBUG
+#define DEBUG 0
+#endif
 
 
 #define MEMLENGTH 512
@@ -54,33 +57,43 @@ void *mymalloc(size_t size, char* file, int line) {
     metadata *start_ptr = (metadata*)memory;
     metadata *payload_ptr = NULL;
 
+    if(DEBUG) printf("you've gotten here alloc step 1");
+
     while((double*)start_ptr <= &memory[MEMLENGTH-(sizeof(metadata)/sizeof(double))]) {
+    if(DEBUG) printf("you've gotten here alloc step 2");
         int *curr_header = (int *)start_ptr;
         chunk.size = curr_header[0];
         chunk.use = curr_header[1];
 
         if(chunk.size == 0 && chunk.use == 0) {
+            if(DEBUG) printf("you've gotten here alloc step 3");
             assign_header(curr_header, size + sizeof(metadata));
             payload_ptr = start_ptr + 1;
             init_next_chunk(curr_header, MEMLENGTH*(sizeof(double)) - (size + sizeof(metadata)));
             return (void *)payload_ptr;
         }
         if(chunk.size >= size + sizeof(metadata) && chunk.use == 0) {
+            if(DEBUG) printf("you've gotten here alloc step 4");
             assign_header(curr_header, size + sizeof(metadata));
             payload_ptr = start_ptr + 1;
             if(chunk.size > (size + sizeof(metadata))) {
+                if(DEBUG) printf("you've gotten here alloc step 5");
                 init_next_chunk(curr_header, chunk.size - (size + sizeof(metadata)));
             }
             return (void *)payload_ptr;
         }
-        if((chunk.size - (size + sizeof(metadata)) < 0) || chunk.use != 0) {
+        if(chunk.size < (size + sizeof(metadata)) || chunk.use != 0) {
+            if(DEBUG) printf("you've gotten here alloc step 6");
             start_ptr = find_next_chunk((int *)start_ptr);
             if(start_ptr == NULL) {
+                if(DEBUG) printf("you've gotten here alloc step 7");
                 break;
             }
         }
+        if(DEBUG) printf("you've gotten here alloc step 8");
 
     }
+    if(DEBUG) printf("you've gotten here step 9");
     printf("Error at %s:%d: Not enough memory :(\n", file, line);
     return NULL;
 
@@ -93,20 +106,20 @@ void myfree(void* ptr, char* file, int line) {
         return;
     }
     char *start_ptr = (char *)memory;
-    printf("what is this %p\n", start_ptr);
-    printf("you've gotten here step 1");
+    if(DEBUG) printf("what is this %p\n", start_ptr);
+    if(DEBUG) printf("you've gotten here step 1");
     metadata chunk;
 
     while(start_ptr <= (char*)&memory[MEMLENGTH-(sizeof(metadata)/sizeof(double))]) {
-        //printf("you've gotten here step 2");
+        if(DEBUG) printf("you've gotten here step 2");
         int *curr_header = (int *)start_ptr;
         chunk.size = curr_header[0];
         chunk.use = curr_header[1];
         if(chunk.use == 0 && (start_ptr + chunk.size + sizeof(metadata)) == ptr) {
-            printf("you've gotten here step 3");
+            if(DEBUG) printf("you've gotten here step 3");
             int *curr_chunk = (int *)ptr - 8/sizeof(int);
             if(curr_chunk[1] == 0) {
-                printf("you've gotten here step 4");
+                if(DEBUG) printf("you've gotten here step 4");
                 printf("Error at %s:%d: Freed this memory already :(\n", file, line);  
                 return;
             }
@@ -120,16 +133,16 @@ void myfree(void* ptr, char* file, int line) {
         }
 
         if ((start_ptr + sizeof(metadata)) == (char *)ptr) {
-            printf("you've gotten here step 5");
+            if(DEBUG) printf("you've gotten here step 5");
             int *curr_chunk = (int *)ptr - sizeof(metadata)/sizeof(int);
             if(curr_chunk[1] == 0) {
-                printf("you've gotten here step 6");
+                if(DEBUG) printf("you've gotten here step 6");
                 printf("Error at %s:%d: Freed this memory already :(\n", file, line); 
                 return;
             }
             int *nextChunk = find_next_chunk(curr_chunk);
             if(nextChunk != NULL && nextChunk[1] == 0) {
-                printf("you've gotten here step 6");
+                if(DEBUG) printf("you've gotten here step 7");
                 merge_chunks((int *)start_ptr, nextChunk);
             }
             curr_chunk[1] = 0;
@@ -138,14 +151,13 @@ void myfree(void* ptr, char* file, int line) {
         }
         start_ptr = (char *)find_next_chunk((int *)start_ptr);
         if(start_ptr == NULL) {
-            printf("you've gotten here step 7");
+            if(DEBUG) printf("you've gotten here step 8");
             break;
         }
-        //printf("you've gotten here step 8");
+        if(DEBUG) printf("you've gotten here step 9");
     }
-    printf("you've gotten here step 9");
+    if(DEBUG) printf("you've gotten here step 10");
     printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
-    printf("you've gotten here step 10");
 }
 
 

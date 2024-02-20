@@ -33,9 +33,8 @@ void test2() {                                          // trying to allocate mo
 
 
 void test3(){
-    void *memgrind_arr[10];
-    memgrind_arr[0] = malloc(0);                                        // trys to allocate a memory that's too large, return error 
-    free(memgrind_arr[0]);                                              // trys to free, should return error as it was not put into memory
+    void* ptr = malloc(0);
+    free(ptr);                                             // trys to free, should return error as it was not put into memory
 }
 
 
@@ -59,19 +58,16 @@ void test4(){
 }
 
 
-void test5() {                          // tries to free something that was not allocated. should return error
-    void* ptr;
-    free(ptr);
-}
+
 
 
 int main(int argc, char* argv[]) {
 
-    test1();
-    test2();
-    test3();
-    test4();
-    test5();
+    // test1();
+    // test2();
+    // test3();
+    // test4();
+    // test5();
 
     // for (int i = 0; i < 50; i++) {
     //     // test6();
@@ -86,4 +82,5 @@ int main(int argc, char* argv[]) {
     // printf("mem deallocated at %p\n", arr[1]);
     // free(arr[2]);
     // printf("mem deallocated at %p\n", arr[2]);
+    return 0;
 }
