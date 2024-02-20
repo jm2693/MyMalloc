@@ -32,42 +32,10 @@ Free checks:
 - only coalesce free adjacent chunks                  
 
 
-Memgrind Testing:
-- malloc() and immediately free() a 1-byte object, 120 times
-- Use malloc() to get 120 1-byte objects, storing the pointers in an array, then use free() to deallocate the chunks.
-- Create an array of 120 pointers. Repeatedly make a random choice between allocating a 1-byte object and adding the pointer to the array and deallocating a previously allocated object 
-  (if any), until you have allocated 120 times. Deallocate any remaining objects.
-- Use malloc() to allocate 120 1-byte objects, storing the pointers in an array, then use free() to deallocate every other object.
-    Then allocate 1 120-byte object. This checks for memory fragmentation and if fragmented memory coaleces        // maybe not
-- Use malloc() to allocate maximum amount in memory array: 4096 bytes. use free() to deallocate (will be repeated 50 times)
-- If there is a free 24 bytes at the end of the array and the user only asks for an int or char or byte or anything =< 8 bytes, you will need a 8 byte header, 8 byte payload, but instead of creating a new header, it allocates the 8 bytes back to the own payload. ie 8-byte header, 16-byte paylaod. 
-
 
 Runtime Choices:
 - added additional header to the beginning of the array with a pointer to the largest free chunk
     this allows for O(1) avg time when allocated memory 
-
-mymalloc.c notes:
-- traverse the memory array linearly to find the next free space to allocate data 
-
-    typedef struct metaData:
-        - is a struct for the meta data 
-        - contains size of the data following 
-        - allocation is determined by 0 (not allocated) and 1 (allocated)
-    
-    size_t align
-        - function that rounds the sizes of data to nearest multiple of 8 for alignment
-    
-    void init_heap()
-        - initializes the heap 
-        - creates a metaData pointer that points to start of heap 
-        - size is set to the MEMLENGTH (512) minus the headeer that was just initialized
-        - allocation set to 0 
-    
-    void *mymalloc
-        - first checks for whether the size is larger than MEMLENGTH and if value of size is 0  //returns error
-
-
 
 
 Official memgrind test cases:
