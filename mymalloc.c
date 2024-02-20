@@ -120,7 +120,7 @@ void myfree(void *ptr, char *file, int line) {
             return;
         }
         
-        if(start_ptr + sizeof(metadata) == (char*)ptr){                             // checks if the data is equal to the pointer
+        if(start_ptr + sizeof(metadata) == (char*)ptr){                                  // checks if the data is equal to the pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to current chunk
             if(currentChunk[1] == 0){
                 
