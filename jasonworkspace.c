@@ -117,7 +117,7 @@ void myfree(void *ptr, char *file, int line) {
                 printf("Error at %s:%d: Freed this 2 memory already :(\n", file, line);           
                 return;
             }
-            int *nextChunk = next_chunk(currentChunk);                        // set nextChunk to point to the next chunk of currentChunk
+            int *nextChunk = next_chunk(currentChunk);                                   // set nextChunk to point to the next chunk of currentChunk
             if(nextChunk != NULL && nextChunk[1] == 0){                                  // 
                 mergeChunks((int *)start_ptr, nextChunk);                                // merge start and the next chunk (which would be empty)
             }
