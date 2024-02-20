@@ -24,18 +24,23 @@ void *find_next_chunk(int* current) {
     return NULL;
 }
 
-void init_next_chunk(int* curr_header, size_t size) {
-    int* nextcurr_header = find_next_chunk(curr_header);
-    if(nextcurr_header != NULL) {
-        nextcurr_header[0] = size;
-        nextcurr_header[1] = 0;
+void init_next_chunk(int* curr_header, size_t size) {       // takes ptr to current_header and size of (metadata+freespace)
+    int* nextcurr_header = find_next_chunk(curr_header);    // uses find_next_chunk helper to get ptr to next chunk spot
+    if(nextcurr_header != NULL) {                           // checks to see if next chunk would be within array heap
+        nextcurr_header[0] = size;                          // sets first spot of header to be size
+        nextcurr_header[1] = 0;                             // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
     }
 }
 
-void merge_chunks(int* current, int* next) {
-    current[0] = current[0] + next[0];
-    next[0] = 0;
-    next[1] = 0;
+void assign_header(int* current_headerstart, size_t size) {     // used to set the data within the next header 
+    current_headerstart[0] = size;                              // 
+    current_headerstart[1] = 1;
+}
+
+void merge_chunks(int* current_chunk, int* next_chunk) {
+    current_chunk[0] = current_chunk[0] + next_chunk[0];
+    next_chunk[0] = 0;
+    next_chunk[1] = 0;
 }
 
 void *mymalloc(size_t size, char* file, int line) {
@@ -46,24 +51,22 @@ void *mymalloc(size_t size, char* file, int line) {
     }
     
     metadata chunk;
-    double *payload_ptr = NULL;
-    double *start_ptr = memory;
+    metadata *start_ptr = (metadata*)memory;
+    metadata *payload_ptr = NULL;
 
-    while(start_ptr <= &memory[MEMLENGTH-(sizeof(metadata)/sizeof(double))]) {
+    while((double*)start_ptr <= &memory[MEMLENGTH-(sizeof(metadata)/sizeof(double))]) {
         int *curr_header = (int *)start_ptr;
         chunk.size = curr_header[0];
         chunk.use = curr_header[1];
 
         if(chunk.size == 0 && chunk.use == 0) {
-            curr_header[0] = size + sizeof(metadata);
-            curr_header[1] = 1;
+            assign_header(curr_header, size + sizeof(metadata));
             payload_ptr = start_ptr + 1;
             init_next_chunk(curr_header, MEMLENGTH*(sizeof(double)) - (size + sizeof(metadata)));
             return (void *)payload_ptr;
         }
         if(chunk.size >= size + sizeof(metadata) && chunk.use == 0) {
-            curr_header[0] = size + sizeof(metadata);
-            curr_header[1] = 1;
+            assign_header(curr_header, size + sizeof(metadata));
             payload_ptr = start_ptr + 1;
             if(chunk.size > (size + sizeof(metadata))) {
                 init_next_chunk(curr_header, chunk.size - (size + sizeof(metadata)));
@@ -95,7 +98,7 @@ void myfree(void* ptr, char* file, int line) {
         if(chunk.use == 0 && (start_ptr + chunk.size + sizeof(metadata)) == ptr) {
             int *curr_chunk = (int *)ptr - 8/sizeof(int);
             if(curr_chunk[1] == 0) {
-                printf("Error: already freed memory\n");
+                printf("Error at %s:%d: Freed this memory already :(\n", file, line);  
                 return;
             }
             int *next_chunk = find_next_chunk(curr_header);
@@ -110,7 +113,7 @@ void myfree(void* ptr, char* file, int line) {
         if ((start_ptr + sizeof(metadata)) == (char *)ptr) {
             int *curr_chunk = (int *)ptr - sizeof(metadata)/sizeof(int);
             if(curr_chunk[1] == 0) {
-                printf("Error: already freed memory\n");
+                printf("Error at %s:%d: Freed this memory already :(\n", file, line); 
                 return;
             }
             int *nextChunk = find_next_chunk(curr_chunk);
@@ -126,7 +129,7 @@ void myfree(void* ptr, char* file, int line) {
             break;
         }
     }
-    printf("Pointer not in heap\n");
+    printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
 }
 
 
