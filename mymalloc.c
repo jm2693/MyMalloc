@@ -17,17 +17,17 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
 
 void *next_chunk(metadata *current_header) {                                                        // passes the current header to find location of next header
     char *next_ptr = (char*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
-    if (next_ptr <= (char*)(&memory[MEMLENGTH-1])) {                                               // if 
+    if (next_ptr <= (char*)(&memory[MEMLENGTH-1])) {                                                // if 
         return (void*)next_ptr;                                                                     // returns a void pointer to the next header. Can be casted to metadata or int
     }
     return NULL;                                                                                    // if the next header ptr goes outside of the array it returns NULL
 }
 
 void init_next_chunk(metadata *current_header, size_t size) {   // takes ptr to current_header and size of (metadata+freespace)
-    metadata *next_header = (next_chunk(current_header));      // uses next_chunk helper to get ptr to next chunk spot
+    metadata *next_header = (next_chunk(current_header));       // uses next_chunk helper to get ptr to next chunk spot
     if (next_header != NULL) {                                  // checks to see if next chunk would be within array heap
-        next_header->chunk_size = size;                                  // sets first spot of header to be size
-        next_header->in_use = 0;                                     // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
+        next_header->chunk_size = size;                         // sets first spot of header to be size
+        next_header->in_use = 0;                                // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
     } 
 }
 
@@ -118,7 +118,7 @@ void myfree(void *ptr, char *file, int line) {
             return;
         }
         
-        else if(start_ptr + sizeof(metadata) == (char*)ptr){                                 // checks if the data is equal to the pointer
+        else if(start_ptr + sizeof(metadata) == (char*)ptr){                             // checks if the data is equal to the pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to current chunk
             if(currentChunk[1] == 0){
                 
