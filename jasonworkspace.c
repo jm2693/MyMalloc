@@ -45,7 +45,7 @@ void merge_chunks(int* current_chunk, int* next_chunk) {
 
 void *mymalloc(size_t size, char* file, int line) {
     size = align(size);                                                         // ensures allignment 
-    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){           // checks if size is bigger than 4096 bytes or less than or equal to 0 
+    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){          // checks if size is bigger than 4096 bytes or less than or equal to 0 
         printf("Error at %s:%d: Invalid size\n", file, line);                   // error message
         return NULL;
     }
