@@ -24,7 +24,7 @@ void *next_chunk(metadata *current_header) {                                    
 }
 
 void init_next_chunk(metadata *current_header, size_t size) {   // takes ptr to current_header and size of (metadata+freespace)
-    int *next_header = (int*)(next_chunk(current_header));     // uses next_chunk helper to get ptr to next chunk spot
+    int *next_header = (int*)(next_chunk(current_header));      // uses next_chunk helper to get ptr to next chunk spot
     if (next_header != NULL) {                                  // checks to see if next chunk would be within array heap
         next_header[0] = size;                                  // sets first spot of header to be size
         next_header[1] = 0;                                     // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
@@ -40,7 +40,7 @@ void mergeChunks(int* current_header, int* nextChunk){
 
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
-    if(size > MEMLENGTH*sizeof(double) || size <= 0){                          // checks if size is bigger than 4096 bytes or less than or equal to 0 
+    if(size > MEMLENGTH*sizeof(double) || size <= 0){           // checks if size is bigger than 4096 bytes or less than or equal to 0 
         printf("Error at %s:%d: Invalid size\n", file, line);   // error message
         return NULL;
     }
@@ -79,7 +79,7 @@ void *mymalloc(size_t size, char *file, int line) {
         //} 
         if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
             if (start_ptr != NULL) {
-                start_ptr = next_chunk((metadata*)(start_ptr));          // NEED TO FIX
+                start_ptr = next_chunk((metadata*)(start_ptr));     
             } else break;
         }
     }
@@ -97,7 +97,7 @@ void myfree(void *ptr, char *file, int line) {
         metadata init;                                           
         int *chunk = (int*)start_ptr;                                                    // points to start of memory
         init.chunk_size = chunk[0];                                    
-        init.in_use = chunk[1];
+        init.in_use = chunk[1]; 
 
         if(init.in_use == 0 && (start_ptr + init.chunk_size + sizeof(metadata)) == ptr){ // checks for if the data is not allocated and if address is the same as pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to metadata of chunk being deallocated
@@ -106,7 +106,7 @@ void myfree(void *ptr, char *file, int line) {
                 return;
             }
             int *nextChunk = next_chunk((metadata*)currentChunk);                        // set nextChunk to point to the next chunk of currentChunk
-            if(nextChunk != NULL && nextChunk[1] == 0){                                 // 
+            if(nextChunk != NULL && nextChunk[1] == 0){                                  // 
                 mergeChunks((int *)start_ptr, nextChunk);                                // merge start and the next chunk (which would be empty)
             }
             mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));        // merge 
@@ -114,9 +114,10 @@ void myfree(void *ptr, char *file, int line) {
             return;
         }
         
-        if(start_ptr + sizeof(metadata) == (char *)ptr){                                // checks if the data is equal to the pointer
-            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);              // points to curretn chunk
+        if(start_ptr + sizeof(metadata) == (char *)ptr){                                 // checks if the data is equal to the pointer
+            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to current chunk
             if(currentChunk[1] == 0){
+                
                 printf("Error at %s:%d: Freed this 1 memory already :(\n", file, line); 
                 return;
             }
@@ -124,8 +125,8 @@ void myfree(void *ptr, char *file, int line) {
             if(nextChunk != NULL && nextChunk[1] == 0){                                
                 mergeChunks((int *)start_ptr, nextChunk);                               
             }
-            currentChunk[1] = 0;                                                        // marks current chunk as deallocated
-            ptr = NULL;                                                                 // deallocates ptr
+            currentChunk[1] = 0;                                                         // marks current chunk as deallocated
+            ptr = NULL;                                                                  // deallocates ptr
             return;
         }
 
