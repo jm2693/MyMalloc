@@ -8,7 +8,7 @@
 #endif
 
 void test1() {
-    void *memgrind_arr[4096];                                           // a test array used to store pointers to allocated memory
+    void *memgrind_arr[120];                                           // a test array used to store pointers to allocated memory
     for (int i = 0; i < 120; i++) {                                      // will repeat 120 times
         memgrind_arr[i] = malloc(1);                                    // allocating malloc at a position in memgrind_arr for testing
         if (DEBUG) {
@@ -24,7 +24,7 @@ void test1() {
 }
 
 void test2() {
-    void *memgrind_arr[4096];
+    void *memgrind_arr[120];
     for (int i = 0; i < 120; i++) {
         memgrind_arr[i] = malloc(1);
         if (DEBUG) {
@@ -37,7 +37,7 @@ void test2() {
             printf("memory freed at %p\n", &memgrind_arr[i]);           // printing free statement
         } 
     }
-    memgrind_arr[18] = malloc(4050);                                    // should be able to be allocated 
+    //memgrind_arr[18] = malloc(4050);                                    // should be able to be allocated 
 }
 
 // void test3() {
@@ -79,10 +79,9 @@ void test6(){
 
 int main(int argc, char* argv[]) {
 
+        test2();
     for (int i = 0; i < 50; i++) {
-    test1();
         //test1();
-        //test2();
         //test3();
     }
 }
