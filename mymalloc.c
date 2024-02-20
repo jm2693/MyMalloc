@@ -17,7 +17,7 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
 
 void *next_chunk(metadata *current_header) {                                                        // passes the current header to find location of next header
     char *next_ptr = (char*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
-    if (next_ptr-(char*)(&memory[MEMLENGTH-1]) < 0) {                                               // if 
+    if (next_ptr <= (char*)(&memory[MEMLENGTH-1])) {                                               // if 
         return (void*)next_ptr;                                                                     // returns a void pointer to the next header. Can be casted to metadata or int
     }
     return NULL;                                                                                    // if the next header ptr goes outside of the array it returns NULL
