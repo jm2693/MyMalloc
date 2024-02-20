@@ -60,6 +60,7 @@ void *mymalloc(size_t size, char *file, int line) {
             chunk->chunk_size = size + sizeof(metadata);           // allocated size asked for plus size of its own header
             chunk->in_use = 1;                                 // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;                            // increment current pointer to one following start
+            printf("returning address of %p\n", payload);
 
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
             init_next_chunk(chunk, (chunk->chunk_size - size));
@@ -69,6 +70,7 @@ void *mymalloc(size_t size, char *file, int line) {
             chunk->chunk_size = size + sizeof(metadata);           // allocated size asked for plus size of its own header
             chunk->in_use = 1;                                 // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;
+            printf("returning address of %p\n", payload);
 
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
             init_next_chunk(chunk, (chunk->chunk_size - size));
