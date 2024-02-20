@@ -117,6 +117,7 @@ void myfree(void *ptr, char *file, int line) {
             }
             mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));        // merge 
             ptr = NULL;                                                                  // fully deallocated the ptr
+            printf("returning 1 address of %p\n", start_ptr);
             return;
         }
         
@@ -133,6 +134,7 @@ void myfree(void *ptr, char *file, int line) {
             }
             currentChunk[1] = 0;                                                         // marks current chunk as deallocated
             ptr = NULL;                                                                  // deallocates ptr
+            printf("returning 2 address of %p\n", start_ptr);
             return;
         }
 
