@@ -79,57 +79,6 @@ void test3() {
 
 
 
-void test4() {
-    void* ptr = malloc(1);
-    printf("memory allocated at %p\n", ptr); 
-    ptr = malloc(3);
-    printf("memory allocated at %p\n", ptr); 
-    free(ptr);
-    if (DEBUG) {
-        printf("memory freed at %p\n", ptr);           // printing free statement
-    } 
-    free(ptr);
-    if (DEBUG) {
-        printf("memory freed at %p\n", ptr);           // printing free statement
-    } 
-}
-
-void test5() {
-    void *memgrind_arr[2];
-    memgrind_arr[0] = malloc(4099);                                     // trys to allocate a memory that's too large, return error 
-    free(memgrind_arr[0]);                                              // trys to free, should return error as it was not put into memory
-}
-
-void test6(){
-    void *memgrind_arr[10];
-    memgrind_arr[0] = malloc(0);                                        // trys to allocate a memory that's too large, return error 
-    free(memgrind_arr[0]);                                              // trys to free, should return error as it was not put into memory
-}
-
-void test7(){
-    void *memgrind_arr[10];
-    for(int i = 0; i < 4; i++){
-        memgrind_arr[i] = malloc(1000);
-        if (DEBUG) {
-            printf("memory allocated at %p\n", memgrind_arr[i]);       // printing malloc statement
-        } 
-    }
-    free(memgrind_arr[0]);
-    if (DEBUG) {
-            printf("memory freed at %p\n", memgrind_arr[0]);       // printing malloc statement
-        } 
-    free(memgrind_arr[2]);
-    if (DEBUG) {
-            printf("memory freed at %p\n", memgrind_arr[2]);       // printing malloc statement
-        } 
-    memgrind_arr[3] = malloc(2000);                                     // should fail
-}
-
-void test8() {
-    void* ptr;
-    free(ptr);
-}
-
 int main(int argc, char* argv[]) {
 
     //test1();
