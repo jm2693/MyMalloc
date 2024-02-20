@@ -48,17 +48,17 @@ void *mymalloc(size_t size, char *file, int line) {
     
     metadata *chunk = (metadata*)memory;                        // storing size and if in_use within metadata struct
     double *payload = NULL;                                     // ptr to payload returned to client. initially points to nothing 
-    double *start_ptr = memoary;                                 // pointer to the start of memory  
+    double *start_ptr = memory;                                 // pointer to the start of memory  
     double *end_ptr = &memory[MEMLENGTH-1];                     // pointer to end of memory 
 
     while (start_ptr <= end_ptr) {                              // scans through entire heap array until it ends
         metadata *curr_header = (metadata*)start_ptr;                     // points to start of memory on first run. int pointer to get metadata values                                      
         chunk->chunk_size = curr_header->chunk_size;                                    
-        chunk->in_use = curr_header[1];
+        chunk->in_use = curr_header->in_use;
 
         if (chunk->chunk_size == 0 && chunk->in_use == 0) {     // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
-            chunk->chunk_size = size + sizeof(metadata);        // allocated size asked for plus size of its own header
-            chunk->in_use = 1;                                  // in_use = 1 to represent curr_header being allocated
+            curr_header->chunk_size = size + sizeof(metadata);        // allocated size asked for plus size of its own header
+            curr_header->in_use = 1;                                  // in_use = 1 to represent curr_header being allocated
             // printf("returning 4 address of %p\n", start_ptr);
             // start_ptr = next_chunk((metadata*)(start_ptr));    
             // printf("returning 3 address of %p\n", start_ptr);
