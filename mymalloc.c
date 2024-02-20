@@ -97,7 +97,7 @@ void myfree(void *ptr, char *file, int line) {
         metadata init;                                           
         int *chunk = (int*)start_ptr;                                                    // points to start of memory
         init.chunk_size = chunk[0];                                    
-        init.in_use = chunk[1];
+        init.in_use = chunk[1]; 
 
         if(init.in_use == 0 && (start_ptr + init.chunk_size + sizeof(metadata)) == ptr){ // checks for if the data is not allocated and if address is the same as pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to metadata of chunk being deallocated
@@ -117,6 +117,7 @@ void myfree(void *ptr, char *file, int line) {
         if(start_ptr + sizeof(metadata) == (char *)ptr){                                 // checks if the data is equal to the pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to curretn chunk
             if(currentChunk[1] == 0){
+                
                 printf("Error at %s:%d: Freed this 1 memory already :(\n", file, line); 
                 return;
             }
