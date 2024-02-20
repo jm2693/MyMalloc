@@ -40,9 +40,9 @@ void mergeChunks(int* current_header, int* nextChunk){
 
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
-    size = align(size);                                         // ensures allignment 
+    size = align(size);                                                         // ensures allignment 
     if(size > MEMLENGTH*sizeof(double)-sizeof(metadata)|| size <= 0){           // checks if size is bigger than 4096 bytes or less than or equal to 0 
-        printf("Error at %s:%d: Invalid size\n", file, line);   // error message
+        printf("Error at %s:%d: Invalid size\n", file, line);                   // error message
         return NULL;
     }
     
@@ -57,8 +57,8 @@ void *mymalloc(size_t size, char *file, int line) {
         chunk->in_use = curr_header[1];
 
         if (chunk->chunk_size == 0 && chunk->in_use == 0) {     // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
-            chunk->chunk_size = size + sizeof(metadata);           // allocated size asked for plus size of its own header
-            chunk->in_use = 1;                                 // in_use = 1 to represent curr_header being allocated
+            chunk->chunk_size = size + sizeof(metadata);        // allocated size asked for plus size of its own header
+            chunk->in_use = 1;                                  // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;                            // increment current pointer to one following start
             printf("returning address of %p\n", payload);
 
@@ -66,9 +66,9 @@ void *mymalloc(size_t size, char *file, int line) {
             init_next_chunk(chunk, (chunk->chunk_size - size));
             return (void*)payload;
             
-        } if (chunk->chunk_size - (size + sizeof(metadata)) >= 0) {         
-            chunk->chunk_size = size + sizeof(metadata);           // allocated size asked for plus size of its own header
-            chunk->in_use = 1;                                 // in_use = 1 to represent curr_header being allocated
+        } else if (chunk->chunk_size - (size + sizeof(metadata)) >= 0) {         
+            chunk->chunk_size = size + sizeof(metadata);        // allocated size asked for plus size of its own header
+            chunk->in_use = 1;                                  // in_use = 1 to represent curr_header being allocated
             payload = start_ptr + 1;
             printf("returning address of %p\n", payload);
 
@@ -76,10 +76,12 @@ void *mymalloc(size_t size, char *file, int line) {
             init_next_chunk(chunk, (chunk->chunk_size - size));
             return (void*)payload;
         } 
+
         //if (chunk->chunk_size - (size + sizeof(metadata)) == sizeof(metadata)) {
             
         //} 
-        if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
+
+        else if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
             if (start_ptr != NULL) {
                 start_ptr = next_chunk((metadata*)(start_ptr));     
             } else break;
@@ -116,7 +118,7 @@ void myfree(void *ptr, char *file, int line) {
             return;
         }
         
-        if(start_ptr + sizeof(metadata) == (char*)ptr){                                 // checks if the data is equal to the pointer
+        else if(start_ptr + sizeof(metadata) == (char*)ptr){                                 // checks if the data is equal to the pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to current chunk
             if(currentChunk[1] == 0){
                 
