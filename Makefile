@@ -1,7 +1,7 @@
 CC = gcc -Wall -Wvla -std=c99 -fsanitize=address
 CFLAGS=-I.
 DEPS = mymalloc.h
-OBJ = mymalloc.o memgrind.o memtest.o
+OBJ = jasonworkspace.o memgrind.o memtest.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -g -o $@ $< $(CFLAGS)
