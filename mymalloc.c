@@ -40,11 +40,11 @@ void mergeChunks(int* current_header, int* nextChunk){
 
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
+    size = align(size);                                         // ensures allignment 
     if(size > MEMLENGTH*sizeof(double) || size <= 0){           // checks if size is bigger than 4096 bytes or less than or equal to 0 
         printf("Error at %s:%d: Invalid size\n", file, line);   // error message
         return NULL;
     }
-    size = align(size);                                         // ensures allignment 
     
     metadata *chunk = (metadata*)memory;                        // storing size and if in_use within metadata struct
     double *payload = NULL;                                     // ptr to payload returned to client. initially points to nothing 
