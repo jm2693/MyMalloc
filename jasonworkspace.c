@@ -106,12 +106,12 @@ void myfree(void *ptr, char *file, int line) {
     char *end_ptr = (char *)(&memory[MEMLENGTH-1]);                                      // points to end of memory 
 
     while(start_ptr <= end_ptr){
-        metadata init;                                           
+        metadata *init = (metadata*)memory;                                            
         int *chunk = (int*)start_ptr;                                                    // points to start of memory
-        init.chunk_size = chunk[0];                                    
-        init.in_use = chunk[1]; 
+        init->chunk_size = chunk[0];                                    
+        init->in_use = chunk[1]; 
 
-        if(init.in_use == 0 && (start_ptr + init.chunk_size + sizeof(metadata)) == ptr){ // checks for if the data is not allocated and if address is the same as pointer
+        if(init->in_use == 0 && (start_ptr + init->chunk_size + sizeof(metadata)) == ptr){ // checks for if the data is not allocated and if address is the same as pointer
             int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to metadata of chunk being deallocated
             if(currentChunk[1] == 0){                                                    // if it has been deallocated, give error message
                 printf("Error at %s:%d: Freed this 2 memory already :(\n", file, line);           
