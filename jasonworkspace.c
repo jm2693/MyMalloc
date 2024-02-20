@@ -59,15 +59,9 @@ void *mymalloc(size_t size, char* file, int line) {
         chunk.size = curr_header[0];
         chunk.use = curr_header[1];
 
-<<<<<<< HEAD
         if(chunk.size == 0 && chunk.use == 0) {
             assign_header(curr_header, size + sizeof(metadata));
             payload_ptr = start_ptr + 1;
-=======
-        if(chunk.size == 0 && chunk.use == 0) {                                              // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
-            assign_header(curr_header, size + sizeof(metadata));
-            payload_ptr = start_ptr + 1;                                                     // increment current pointer to one following start
->>>>>>> defce360bcc840e33f7b9e0870acdb8464388d2b
             init_next_chunk(curr_header, MEMLENGTH*(sizeof(double)) - (size + sizeof(metadata)));
             return (void *)payload_ptr;
         }
