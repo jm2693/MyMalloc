@@ -15,19 +15,19 @@ size_t align(size_t size) {         // method to align everything as 8-byte alig
     return (size+7) & ~7;           // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
-void *next_chunk(metadata *current_header) {                                                        // passes the current header to find location of next header
-    char *next_ptr = (char*)(current_header + (current_header->chunk_size)/(sizeof(metadata)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
+void *next_chunk(int *current_header) {                                                        // passes the current header to find location of next header
+    char *next_ptr = (char*)(current_header + (current_header[0])/(sizeof(metadata)));     // second part gets size of current chunk in terms of metadata added to current header ptr and all casted as a char pointer for bytes
     if (next_ptr <= (char*)(&memory[MEMLENGTH-1])) {                                                // if 
         return (void*)next_ptr;                                                                     // returns a void pointer to the next header. Can be casted to metadata or int
     }
     return NULL;                                                                                    // if the next header ptr goes outside of the array it returns NULL
 }
 
-void init_next_chunk(metadata *current_header, size_t size) {   // takes ptr to current_header and size of (metadata+freespace)
-    metadata *next_header = (next_chunk(current_header));       // uses next_chunk helper to get ptr to next chunk spot
-    if (next_header != NULL) {                                  // checks to see if next chunk would be within array heap
-        next_header->chunk_size = size;                         // sets first spot of header to be size
-        next_header->in_use = 0;                                // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
+void init_next_chunk(int *current_header, size_t size) {   // takes ptr to current_header and size of (metadata+freespace)
+    int *next_header = (next_chunk(current_header));       // uses next_chunk helper to get ptr to next chunk spot
+    if (next_header != NULL) {                             // checks to see if next chunk would be within array heap
+        next_header[0] = size;                             // sets first spot of header to be size
+        next_header[1] = 0;                                // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
     } 
 }
 
@@ -102,33 +102,33 @@ void *mymalloc(size_t size, char *file, int line) {
 
 
 void myfree(void *ptr, char *file, int line) {
-    char *start_ptr = (char *)memory;                                                    // casts pointers as char to read memory at byte level
-    char *end_ptr = (char *)(&memory[MEMLENGTH-1]);                                      // points to end of memory 
+    char *start_ptr = (char *)memory;                                                      // casts pointers as char to read memory at byte level
+    char *end_ptr = (char *)(&memory[MEMLENGTH-1]);                                        // points to end of memory 
 
     while(start_ptr <= end_ptr){
         metadata *init = (metadata*)memory;                                           
-        int *chunk = (int*)start_ptr;                                                    // points to start of memory
+        int *chunk = (int*)start_ptr;                                                      // points to start of memory
         init->chunk_size = chunk[0];                                    
         init->in_use = chunk[1]; 
 
         if(init->in_use == 0 && (start_ptr + init->chunk_size + sizeof(metadata)) == ptr){ // checks for if the data is allocated and if address is the same as pointer
-            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to metadata of chunk being deallocated
-            if(currentChunk[1] == 0){                                                    // if it has been deallocated, give error message
+            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);                 // points to metadata of chunk being deallocated
+            if(currentChunk[1] == 0){                                                      // if it has been deallocated, give error message
                 printf("Error at %s:%d: Freed this 2 memory already :(\n", file, line);           
                 return;
             }
-            int *nextChunk = next_chunk((metadata*)currentChunk);                        // set nextChunk to point to the next chunk of currentChunk
-            if(nextChunk != NULL && nextChunk[1] == 0){                                  // 
-                mergeChunks((int *)start_ptr, nextChunk);                                // merge start and the next chunk (which would be empty)
+            int *nextChunk = next_chunk((metadata*)currentChunk);                          // set nextChunk to point to the next chunk of currentChunk
+            if(nextChunk != NULL && nextChunk[1] == 0){                                    // 
+                mergeChunks((int *)start_ptr, nextChunk);                                  // merge start and the next chunk (which would be empty)
             }
-            mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));        // merge 
+            mergeChunks((int *)start_ptr, (int *)(char *)ptr - sizeof(metadata));          // merge 
             printf("free 1 address of %p\n", ptr);
-            ptr = NULL;                                                                  // fully deallocated the ptr
+            ptr = NULL;                                                                    // fully deallocated the ptr
             return;
         }
 
-        if(start_ptr + sizeof(metadata) == (char*)ptr){                                  // checks if the data is equal to the pointer
-            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);               // points to current chunk
+        if(start_ptr + sizeof(metadata) == (char*)ptr){                                    // checks if the data is equal to the pointer
+            int *currentChunk = (int *)ptr - sizeof(metadata)/sizeof(int);                 // points to current chunk
             if(currentChunk[1] == 0){
                 
                 printf("Error at %s:%d: Freed this 1 memory already :(\n", file, line); 
@@ -138,9 +138,9 @@ void myfree(void *ptr, char *file, int line) {
             if(nextChunk != NULL && nextChunk[1] == 0){                                
                 mergeChunks((int *)start_ptr, nextChunk);                               
             }
-            currentChunk[1] = 0;                                                         // marks current chunk as deallocated
+            currentChunk[1] = 0;                                                           // marks current chunk as deallocated
             printf("free 2 address of %p\n", ptr);
-            ptr = NULL;                                                                  // deallocates ptr
+            ptr = NULL;                                                                    // deallocates ptr
             return;
         }
 
