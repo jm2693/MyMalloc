@@ -41,7 +41,7 @@ void mergeChunks(int* current_header, int* nextChunk){
 //malloc implementation 
 void *mymalloc(size_t size, char *file, int line) {
     size = align(size);                                                         // ensures allignment 
-    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){           // checks if size is bigger than 4096 bytes or less than or equal to 0 
+    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){          // checks if size is bigger than 4096 bytes or less than or equal to 0 
         printf("Error at %s:%d: Invalid size\n", file, line);                   // error message
         return NULL;
     }
@@ -57,30 +57,30 @@ void *mymalloc(size_t size, char *file, int line) {
         chunk->in_use = curr_header[1];
 
         if (chunk->chunk_size == 0 && chunk->in_use == 0) {     // first metadata ints are 0, i.e. not allocated and size of 0 (not initialized)
-            chunk->chunk_size = size + sizeof(metadata);        // allocated size asked for plus size of its own header
-            chunk->in_use = 1;                                  // in_use = 1 to represent curr_header being allocated
+            curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
+            curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
             // printf("returning 4 address of %p\n", start_ptr);
             // start_ptr = next_chunk((metadata*)(start_ptr));    
             // printf("returning 3 address of %p\n", start_ptr);
             payload = start_ptr + 1;                            // increment current pointer to one following start
-            printf("returning 1 address of %p\n", payload);
+            //printf("returning 1 address of %p\n", payload);
 
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
-            init_next_chunk(chunk, (chunk->chunk_size - size));
+            init_next_chunk(curr_header, MEMLENGTH - chunk->chunk_size);
             return (void*)payload;
             
         } 
-        start_ptr = next_chunk((metadata*)(start_ptr));    
-        if (chunk->chunk_size - (size + sizeof(metadata)) >= 0) {         
-            chunk->chunk_size = size + sizeof(metadata);        // allocated size asked for plus size of its own header
-            chunk->in_use = 1;                                  // in_use = 1 to represent curr_header being allocated
+        //start_ptr = next_chunk((metadata*)(start_ptr));    
+        if (chunk->chunk_size - (size + sizeof(metadata)) >= 0 && (chunk->in_use == 0)) {         
+            curr_header[0] = size + sizeof(metadata);           // allocated size asked for plus size of its own header
+            curr_header[1] = 1;                                 // in_use = 1 to represent curr_header being allocated
             // start_ptr = next_chunk((metadata*)(start_ptr));    
             // printf("returning 3 address of %p\n", start_ptr);
             payload = start_ptr+1;
-            printf("returning 2 address of %p\n", payload);
+            //printf("returning 2 address of %p\n", payload);
 
             // use init_next_chunk here with curr_header and size of metadata+available space afterwards (in ints)
-            init_next_chunk(chunk, (chunk->chunk_size - size));
+            init_next_chunk(curr_header, (chunk->chunk_size - size));
             return (void*)payload;
         } 
 
@@ -88,12 +88,12 @@ void *mymalloc(size_t size, char *file, int line) {
             
         //} 
 
-        if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
+        //if (chunk->chunk_size < (size + sizeof(metadata)) || chunk->in_use != 0) {
             if (start_ptr != NULL) {
-                start_ptr = next_chunk((metadata*)(start_ptr));    
-                 printf("returning 3 address of %p\n", start_ptr);
+                start_ptr = next_chunk((int*)(start_ptr));    
+                //printf("returning 3 address of %p\n", start_ptr);
             } else break;
-        }
+        //}
     }
     printf("Error at %s:%d: Not enough memory :(\n", file, line);
     return NULL;
