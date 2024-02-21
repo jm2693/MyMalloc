@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "mymalloc.h"
 #ifndef DEBUG
-#define DEBUG 0
+#define DEBUG 1
 #endif
 
 
@@ -15,8 +15,8 @@ typedef struct metadata{
     //struct metadata *next;            // pointer to the next available free space  (not going with this method because increases memory usage by a lot and not necessary for small data sizes)
 } metadata;
 
-size_t align(size_t size) {             // method to align everything as 8-byte aligned
-    return (size+7) & ~7;               // uses addition and bitwise and to round up to nearest multiple of 8
+size_t align(size_t size) {                 // method to align everything as 8-byte aligned
+    return (size+7) & ~7;                   // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
 void *find_next_chunk(int* current) {                                                       // takes current beginning of chunk and 
@@ -48,7 +48,7 @@ void merge_chunks(int* current_chunk, int* next_chunk) {
 
 void *mymalloc(size_t size, char* file, int line) {
     size = align(size);                                                         // ensures allignment 
-    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){          // checks if size is bigger than 4096 bytes or less than or equal to 0 
+    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){           // checks if size is bigger than 4096 bytes or less than or equal to 0 
         printf("Error at %s:%d: Invalid size\n", file, line);                   // error message
         return NULL;
     }
@@ -158,7 +158,5 @@ void myfree(void* ptr, char* file, int line) {
     }
     if(DEBUG) printf("you've gotten here step 10");
     printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
-    return NULL; 
 }
-
 
