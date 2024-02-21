@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "mymalloc.h"
 #ifndef DEBUG
-#define DEBUG 1
+#define DEBUG 0
 #endif
 
 
