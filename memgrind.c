@@ -89,6 +89,25 @@ void test4(){
 }
 
 
+void test5(){
+    void *memgrind_arr[10];
+    for(int i = 0; i < 4; i++){
+        memgrind_arr[i] = malloc(1000);
+        if (DEBUG) {
+            printf("memory allocated at %p\n", memgrind_arr[i]);       // printing malloc statement
+        } 
+    }
+    free(memgrind_arr[0]);
+    if (DEBUG) {
+            printf("memory freed at %p\n", memgrind_arr[0]);       // printing malloc statement
+        } 
+    free(memgrind_arr[2]);
+    if (DEBUG) {
+            printf("memory freed at %p\n", memgrind_arr[2]);       // printing malloc statement
+        } 
+    memgrind_arr[3] = malloc(2000);                                     // should fail
+}
+
 int main(int argc, char* argv[]) {
 
     struct timeval stop, start;
@@ -134,7 +153,6 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < 50; i++) {
 
     test4();
-    
     }
     gettimeofday(&stop, NULL);
     elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
@@ -142,5 +160,15 @@ int main(int argc, char* argv[]) {
     printf("test 4 took %.2f ms\n", elapsed_time_ms/50); 
     elapsed_time_ms = 0;
 
+    gettimeofday(&start, NULL);
+    for (int i = 0; i < 50; i++) {
+
+    test5();
+    }
+    gettimeofday(&stop, NULL);
+    elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
+    elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
+    printf("test 5 took %.2f ms\n", elapsed_time_ms/50); 
+    elapsed_time_ms = 0;
     return 0;
 }

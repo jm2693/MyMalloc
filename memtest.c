@@ -41,33 +41,13 @@ void testC(){
     
 }
 
-void testD(){
-    void *memgrind_arr[10];
-    for(int i = 0; i < 4; i++){
-        memgrind_arr[i] = malloc(1000);
-        if (DEBUG) {
-            printf("memory allocated at %p\n", memgrind_arr[i]);       // printing malloc statement
-        } 
-    }
-    free(memgrind_arr[0]);
-    if (DEBUG) {
-            printf("memory freed at %p\n", memgrind_arr[0]);       // printing malloc statement
-        } 
-    free(memgrind_arr[2]);
-    if (DEBUG) {
-            printf("memory freed at %p\n", memgrind_arr[2]);       // printing malloc statement
-        } 
-    memgrind_arr[3] = malloc(2000);                                     // should fail
-    
-}
-
-void testE() {
+void testD() {
     int *p = malloc(sizeof(int)*2);
     free(p + 1);
     
 }
 
-void testF() {
+void testE() {
     int *p = malloc(sizeof(int)*100);
     int *q = p;
     free(p);
@@ -75,12 +55,12 @@ void testF() {
     
 }
 
-void testG() {
+void testF() {
     int x;
     free(&x);
 }
 
-void testH() {
+void testG() {
     void *memtest_arr[2];
     memtest_arr[0] = malloc(-1);
     free(memtest_arr[0]);
@@ -97,7 +77,6 @@ int _main(int argc, char* argv[]) {
     testE();
     testF();
     testG();
-    testH();
 
     //memtest.c example
     char *obj[OBJECTS];
