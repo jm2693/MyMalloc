@@ -33,36 +33,61 @@ Free checks:
 
 
 
-Runtime Choices:
-- added additional header to the beginning of the array with a pointer to the largest free chunk
-    this allows for O(1) avg time when allocated memory 
+Design Choices:
+- We created a struct called metadata to house two ints, representing the metadata of the header. One indicating size and the other if it is in use.
+    - Two ints fit best because that way we would be able to easily get the values through the array itself, in terms of ints. For 
+    - example, a pointer to a metadata will have the size component stored at (int*)metadata[0] and the in use at (int*)metadata[1].
+    - Moreover, it is the same size as a double, working conveniently for alignment. 
+- Our malloc structure is based off of a linked list. The size component in each header includes the size allocated as well as the 
+    - size of the header itself. If a pointer is pointing to the beginning of a header, the next header will be (size) bytes away.
+- We thought of potentially including an extra pointer in our header, constantly pointing to the next biggest free space. This 
+    - has its pros and cons. Mainly it would be faster, but it would likely come at the at the cost of memory and may cause more 
+    - memory fragmentation. Ultimately for a small heap size such as this one, we decided the increase in speed was not worth it 
+    - and decided to go with this more traditional design.
+- The main way mymalloc() and myfree() function is through the use of while loops, iterating across the entire array each time 
+    - a request to malloc or free occurs. This results in linear time complexity. In each loop, it searches for possible situations
+    - where a chunk COULD be allocated and if nothing is found by the end of the loop, it most likely does not meet the conditions
+    - for being allocated or being freed. 
 
 
 Official memgrind test cases:
 
-testA():
+test1():
  - allocates 1 byte 120 times and immediately deallocates it before the next allocation
  - after that it should be able to allocate a large chunk as the memory should be free
-testB():
+ - avg time: 1.72 ms 
+ - real malloc avg time: 
+test2():
  - allocates 1 byte 120 times and deallocates all the allocated bytes after all of them have been allocated 
  - after that it should be able to allocate a large chunk as the memory should be free
-testC():
- - 
-test1():
+ - avg time: 1.08 ms
+ real malloc avg time:
+test3():
+ - avg time: 168.26 ms
+ - real malloc avg time: 202.00 ms
+
+// avg time is calculated based on running each test 50 times \\
+
+Notes:
+Something very interesting we found was 
+
+Official memtest tets cases:
+
+testA():
  - try to malloc in same location twice
  - free it twice
  - should fail
-test2():
+testB():
  - try to allocate a value bigger than memory
  - should fail
  - try to free the failed allocation
  - should fail
-test3():
+testC():
  - try to allocate 0 bytes
  - should fail
  - try to free the failed allocation
  - should fail
-test4():
+testD():
  - allocate 1000 byte chunks 4 times 
  - free 1st and third 
  - try to allocate 2000 bytes

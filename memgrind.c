@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
-#include "mymalloc.h"
+//#include "mymalloc.h"
 #ifndef DEBUG
 #define DEBUG 1
 #endif
@@ -61,6 +61,9 @@ void test3() {
             allocated[allocated_count] = 0;                                         // not allocated
         }
     }
+    for (int i = 0; i < 120; i++) {
+        free(memgrind_arr[i]);
+    }
 }
 
 
@@ -69,29 +72,29 @@ int main(int argc, char* argv[]) {
 
     struct timeval stop, start;
     double elapsed_time_ms;
-    gettimeofday(&start, NULL);
-    for (int i = 0; i < 50; i++) {                              // running each test 50 times
+    // gettimeofday(&start, NULL);
+    // for (int i = 0; i < 50; i++) {                              // running each test 50 times
 
-    test1();
+    // test1();
     
-    }
-    gettimeofday(&stop, NULL);
-    elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
-    elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
-    printf("test 1 took %.2f ms\n", elapsed_time_ms); 
-    elapsed_time_ms = 0;
+    // }
+    // gettimeofday(&stop, NULL);
+    // elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
+    // elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
+    // printf("test 1 took %.2f ms\n", elapsed_time_ms/50); 
+    // elapsed_time_ms = 0;
 
-    gettimeofday(&start, NULL);
-    for (int i = 0; i < 50; i++) {
+    // gettimeofday(&start, NULL);
+    // for (int i = 0; i < 50; i++) {
 
-    test2();
+    // test2();
     
-    }
-    gettimeofday(&stop, NULL);
-    elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
-    elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
-    printf("test 2 took %.2f ms\n", elapsed_time_ms); 
-    elapsed_time_ms = 0;
+    // }
+    // gettimeofday(&stop, NULL);
+    // elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
+    // elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
+    // printf("test 2 took %.2f ms\n", elapsed_time_ms/50); 
+    // elapsed_time_ms = 0;
 
     gettimeofday(&start, NULL);
     for (int i = 0; i < 50; i++) {
@@ -102,7 +105,7 @@ int main(int argc, char* argv[]) {
     gettimeofday(&stop, NULL);
     elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
     elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
-    printf("test 3 took %.2f ms\n", elapsed_time_ms); 
+    printf("test 3 took %.2f ms\n", elapsed_time_ms/50); 
     elapsed_time_ms = 0;
 
     return 0;
