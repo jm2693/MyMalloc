@@ -158,6 +158,7 @@ void myfree(void* ptr, char* file, int line) {
     }
     if(DEBUG) printf("you've gotten here step 10");
     printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
+    return NULL; 
 }
 
 
