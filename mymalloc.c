@@ -70,7 +70,7 @@ void *mymalloc(size_t size, char* file, int line) {
             init_next_chunk(curr_header, MEMLENGTH*(sizeof(double)) - (size + sizeof(metadata)));   // calls helper method to find and create next chunk, including space left and if in use (by default not)
             return (void *)payload_ptr;                                                             // returns the ptr to the payload to the client
         }
-        if(chunk.size >= size + sizeof(metadata) && chunk.use == 0) {                               // checks if chunk has enough space and is free
+        if(chunk.size >= size + sizeof(metadata) && chunk.use == 0){                                // checks if chunk has enough space and is free
             if(DEBUG) printf("you've gotten here alloc step 4");                                    // for debugging 
             assign_header(curr_header, size + sizeof(metadata));                                    // sets requested values to current header
             payload_ptr = start_ptr + 1;                                                            // payload will be one metadata space away from the current position being scanned, hence, start_ptr + 1
@@ -157,7 +157,7 @@ void myfree(void* ptr, char* file, int line) {
 }
 
 int memClean() {
-    int *header = (int *)memory;
+    metadata *start_ptr = (metadata *)memory;
     int chunkSize = header[0];
     int allocated = header[1];
 
