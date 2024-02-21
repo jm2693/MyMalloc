@@ -82,9 +82,9 @@ void test3() {
 
 int main1(int argc, char* argv[]) {
 
-    // testA();
-    // testB();
-    // testC();
+    test1();
+    test2();
+    test3();
 
     return 0;
 }

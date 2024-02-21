@@ -76,11 +76,11 @@ void testG() {
 
 int main(int argc, char* argv[]) {
 
-    // test1();
-    // test2();
-    // test3();
-    // test4();
-    // test5();
+    // testA();
+    // testB();
+    // testC();
+    // testD();
+    // testE();
 
     // for (int i = 0; i < 50; i++) {
     //     // test6();
