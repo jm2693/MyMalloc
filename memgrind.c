@@ -23,7 +23,6 @@ void test1() {
     printf("memory allocated at %p\n", memgrind_arr[18]);
     free(memgrind_arr[18]);
     printf("memory freed at %p\n", memgrind_arr[18]);                   // printing free statement
-    // memClean();
 }
 
 void test2() {
@@ -41,7 +40,6 @@ void test2() {
             printf("memory freed at %p\n", memgrind_arr[i]);           // printing free statement
         } 
     } 
-    // memClean();
 }
 
 
