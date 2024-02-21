@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
     // testD();
     // testE();
     // testF();
-    // testG();
+     testG();
 
     // for (int i = 0; i < 50; i++) {
     //     // test6();
