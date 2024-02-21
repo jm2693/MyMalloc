@@ -157,11 +157,13 @@ void myfree(void* ptr, char* file, int line) {
 }
 
 int memClean() {
+    metadata chunk;
     metadata *start_ptr = (metadata *)memory;
-    int chunkSize = header[0];
-    int allocated = header[1];
+    int *curr_header = (int *)start_ptr; 
+    chunk.size = curr_header[0];
+    chunk.use  = curr_header[1];
 
-    if ((chunkSize == 0 && allocated == 0) || (chunkSize == MEMLENGTH * sizeof(metadata) && allocated == 0)) {
+    if ((chunk.size == 0 && chunk.use == 0) || (chunk.size == MEMLENGTH * sizeof(metadata) && chunk.use == 0)) {
         return 1;
     }
 
