@@ -8,16 +8,16 @@
 static double memory[MEMLENGTH];
 
 typedef struct metadata{
-    int size;                           // size of memory chunk (including header)
-    int use;                            // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
-    //struct metadata *next;            // pointer to the next available free space  (not going with this method because increases memory usage by a lot and not necessary for small data sizes)
-} metadata;
+    int size;                               // size of memory chunk (including header)
+    int use;                                // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
+    //struct metadata *next;                // pointer to the next available free space  (not going with this method because increases memory usage by a lot and not necessary for small data sizes)
+} metadata; 
 
 size_t align(size_t size) {                 // method to align everything as 8-byte aligned
     return (size+7) & ~7;                   // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
-void *find_next_chunk(int* current) {                                                       // takes current beginning of chunk and 
+void *find_next_chunk(int* current) {       // takes current beginning of chunk and 
     int* nextChunk = (int *)(current + current[0]/sizeof(int));
     if(nextChunk <= (int *)(&memory[MEMLENGTH - (sizeof(metadata)/sizeof(double))])) {
         return (void *)nextChunk;
@@ -25,11 +25,11 @@ void *find_next_chunk(int* current) {                                           
     return NULL;
 }
 
-void init_next_chunk(int* curr_header, size_t size) {       // takes ptr to current_header and size of (metadata+freespace)
-    int* nextcurr_header = find_next_chunk(curr_header);    // uses find_next_chunk helper to get ptr to next chunk spot
-    if(nextcurr_header != NULL) {                           // checks to see if next chunk would be within array heap
-        nextcurr_header[0] = size;                          // sets first spot of header to be size
-        nextcurr_header[1] = 0;                             // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
+void init_next_chunk(int* curr_header, size_t size) {           // takes ptr to current_header and size of (metadata+freespace)
+    int* nextcurr_header = find_next_chunk(curr_header);        // uses find_next_chunk helper to get ptr to next chunk spot
+    if(nextcurr_header != NULL) {                               // checks to see if next chunk would be within array heap
+        nextcurr_header[0] = size;                              // sets first spot of header to be size
+        nextcurr_header[1] = 0;                                 // sets second spot if in use (by default it is not since this is made after an allocation of the previous chunk)
     }
 }
 
@@ -46,7 +46,7 @@ void merge_chunks(int* current_chunk, int* next_chunk) {
 
 void *mymalloc(size_t size, char* file, int line) {
     size = align(size);                                                         // ensures allignment 
-    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){           // checks if size is bigger than 4096 bytes or less than or equal to 0 
+    if(size <= 0 || size > MEMLENGTH*sizeof(double)-sizeof(metadata)){          // checks if size is bigger than 4096 bytes or less than or equal to 0 
         printf("Error at %s:%d: Invalid size\n", file, line);                   // error message
         return NULL;
     }
@@ -57,51 +57,51 @@ void *mymalloc(size_t size, char* file, int line) {
 
     if(DEBUG) printf("you've gotten here alloc step 1");      // for debugging
 
-    while((double*)start_ptr <= &memory[MEMLENGTH-(sizeof(metadata)/sizeof(double))]) {         // scans entire memory array in metadata increments
-    if(DEBUG) printf("you've gotten here alloc step 2");        // for debugging
-        int *curr_header = (int *)start_ptr;                    // creates a header at the beginning of memory as an int* to set metadata values
-        chunk.size = curr_header[0];                            // initializes size as 0 (no size)
-        chunk.use = curr_header[1];                             // initializes in_use as 0 (not in use)
+    while((double*)start_ptr <= &memory[MEMLENGTH-(sizeof(metadata)/sizeof(double))]) {             // scans entire memory array in metadata increments
+    if(DEBUG) printf("you've gotten here alloc step 2");                                            // for debugging
+        int *curr_header = (int *)start_ptr;                                                        // creates a header at the beginning of memory as an int* to set metadata values
+        chunk.size = curr_header[0];                                                                // initializes size as 0 (no size)
+        chunk.use = curr_header[1];                                                                 // initializes in_use as 0 (not in use)
 
-        if(chunk.size == 0 && chunk.use == 0) {                         // if size is 0 and in use is false
-            if(DEBUG) printf("you've gotten here alloc step 3");        // for debugging
-            assign_header(curr_header, size + sizeof(metadata));        // sets requested values to current header
-            payload_ptr = start_ptr + 1;                                // payload will be one metadata space away from the current position being scanned, hence, start_ptr + 1
+        if(chunk.size == 0 && chunk.use == 0) {                                                     // if size is 0 and in use is false
+            if(DEBUG) printf("you've gotten here alloc step 3");                                    // for debugging
+            assign_header(curr_header, size + sizeof(metadata));                                    // sets requested values to current header
+            payload_ptr = start_ptr + 1;                                                            // payload will be one metadata space away from the current position being scanned, hence, start_ptr + 1
             init_next_chunk(curr_header, MEMLENGTH*(sizeof(double)) - (size + sizeof(metadata)));   // calls helper method to find and create next chunk, including space left and if in use (by default not)
-            return (void *)payload_ptr;                                 // returns the ptr to the payload to the client
+            return (void *)payload_ptr;                                                             // returns the ptr to the payload to the client
         }
-        if(chunk.size >= size + sizeof(metadata) && chunk.use == 0) {   // checks if chunk has enough space and is free
-            if(DEBUG) printf("you've gotten here alloc step 4");        // for debugging 
-            assign_header(curr_header, size + sizeof(metadata));        // sets requested values to current header
-            payload_ptr = start_ptr + 1;                                // payload will be one metadata space away from the current position being scanned, hence, start_ptr + 1
-            if(chunk.size > (size + sizeof(metadata))) {                // checks if there will be free space afterwards
-                if(DEBUG) printf("you've gotten here alloc step 5");    // for debugging
-                init_next_chunk(curr_header, chunk.size - (size + sizeof(metadata)));   // if requested size is small than available, finds location of next header
+        if(chunk.size >= size + sizeof(metadata) && chunk.use == 0) {                               // checks if chunk has enough space and is free
+            if(DEBUG) printf("you've gotten here alloc step 4");                                    // for debugging 
+            assign_header(curr_header, size + sizeof(metadata));                                    // sets requested values to current header
+            payload_ptr = start_ptr + 1;                                                            // payload will be one metadata space away from the current position being scanned, hence, start_ptr + 1
+            if(chunk.size > (size + sizeof(metadata))) {                                            // checks if there will be free space afterwards
+                if(DEBUG) printf("you've gotten here alloc step 5");                                // for debugging
+                init_next_chunk(curr_header, chunk.size - (size + sizeof(metadata)));               // if requested size is small than available, finds location of next header
             }
-            return (void *)payload_ptr;                                 // returns ptr to the payload to the client
+            return (void *)payload_ptr;                                                             // returns ptr to the payload to the client
         }
-        if(chunk.size < (size + sizeof(metadata)) || chunk.use != 0) {          // if not enough space available or if chunk is already allocated
-            if(DEBUG) printf("you've gotten here alloc step 6");                // for debugging
-            start_ptr = find_next_chunk((int *)start_ptr);                      // moves start_ptr to beginning of netx header
-            if(start_ptr == NULL) {                                             // if this goes outside the arry it breaks out of the loop
-                if(DEBUG) printf("you've gotten here alloc step 7");            // for debugging
+        if(chunk.size < (size + sizeof(metadata)) || chunk.use != 0) {                              // if not enough space available or if chunk is already allocated
+            if(DEBUG) printf("you've gotten here alloc step 6");                                    // for debugging
+            start_ptr = find_next_chunk((int *)start_ptr);                                          // moves start_ptr to beginning of netx header
+            if(start_ptr == NULL) {                                                                 // if this goes outside the arry it breaks out of the loop
+                if(DEBUG) printf("you've gotten here alloc step 7");                                // for debugging
                 break;
             }
         }
-        if(DEBUG) printf("you've gotten here alloc step 8");                    // for debugging
+        if(DEBUG) printf("you've gotten here alloc step 8");                                        // for debugging
     }
-    if(DEBUG) printf("you've gotten here step 9");                              // for debugging
-    printf("Error at %s:%d: Not enough memory :(\n", file, line);               // prints if no space found for requested size. O(n)
+    if(DEBUG) printf("you've gotten here step 9");                                                  // for debugging
+    printf("Error at %s:%d: Not enough memory :(\n", file, line);                                   // prints if no space found for requested size. O(n)
     return NULL;
 }
 
 
 void myfree(void* ptr, char* file, int line) {
-    if (ptr == NULL || ptr < (void*)memory || ptr >= (void*)&memory[MEMLENGTH]) { // checks for invalid cases
+    if (ptr == NULL || ptr < (void*)memory || ptr >= (void*)&memory[MEMLENGTH]) {                   // checks for invalid cases
         printf("Error at %s:%d: Trying to free a null pointer\n", file, line);
         return;
     }
-    char *start_ptr = (char *)memory;                           // casts pointers as char to read memory at byte level
+    char *start_ptr = (char *)memory;                                                               // casts pointers as char to read memory at byte level
     if(DEBUG) printf("what is this %p\n", start_ptr);
     if(DEBUG) printf("you've gotten here step 1");
     metadata chunk;
@@ -111,24 +111,24 @@ void myfree(void* ptr, char* file, int line) {
         int *curr_header = (int *)start_ptr;
         chunk.size = curr_header[0];
         chunk.use = curr_header[1];
-        if(chunk.use == 0 && (start_ptr + chunk.size + sizeof(metadata)) == ptr) {  // checks for if the data is allocated and if address is the same as pointer
+        if(chunk.use == 0 && (start_ptr + chunk.size + sizeof(metadata)) == ptr) {                  // checks for if the data is allocated and if address is the same as pointer (mainly first instance)
             if(DEBUG) printf("you've gotten here step 3");
-            int *curr_chunk = (int *)ptr - 8/sizeof(int);                           // points to metadata of chunk being deallocated
+            int *curr_chunk = (int *)ptr - 8/sizeof(int);                                           // points to metadata of chunk being deallocated
             if(curr_chunk[1] == 0) {
                 if(DEBUG) printf("you've gotten here step 4");
                 printf("Error at %s:%d: Freed this memory already :(\n", file, line);  
                 return;
             }
-            int *next_chunk = find_next_chunk(curr_header);                      // set nextChunk to point to the next chunk of currentChunk
+            int *next_chunk = find_next_chunk(curr_header);                                         // set nextChunk to point to the next chunk of currentChunk
             if(next_chunk != NULL && next_chunk[1] == 0) {
                 merge_chunks((int *)start_ptr, next_chunk);
             }
-            merge_chunks((int *)start_ptr, (int *)((char *)ptr - sizeof(metadata))); // merge
-            ptr = NULL;                                                                 // fully deallocates the pointer
+            merge_chunks((int *)start_ptr, (int *)((char *)ptr - sizeof(metadata)));                // merge
+            ptr = NULL;                                                                             // fully deallocates the pointer
             return;
         }
 
-        if ((start_ptr + sizeof(metadata)) == (char *)ptr) {
+        if ((start_ptr + sizeof(metadata)) == (char *)ptr) {                                        // checks for if the data is allocated and if address is the same as pointer 
             if(DEBUG) printf("you've gotten here step 5");
             int *curr_chunk = (int *)ptr - sizeof(metadata)/sizeof(int);
             if(curr_chunk[1] == 0) {
