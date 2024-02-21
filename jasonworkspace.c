@@ -101,7 +101,7 @@ void *mymalloc(size_t size, char* file, int line) {
 
 
 void myfree(void* ptr, char* file, int line) {
-    if (ptr == NULL) {
+    if (ptr == NULL || ptr < (void*)memory || ptr >= (void*)&memory[MEMLENGTH]) {
         printf("Error at %s:%d: Trying to free a null pointer\n", file, line);
         return;
     }
