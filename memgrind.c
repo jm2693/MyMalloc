@@ -23,7 +23,7 @@ void test1() {
     printf("memory allocated at %p\n", memgrind_arr[18]);
     free(memgrind_arr[18]);
     printf("memory freed at %p\n", memgrind_arr[18]);                   // printing free statement
-    memClean();
+    // memClean();
 }
 
 void test2() {
@@ -41,7 +41,7 @@ void test2() {
             printf("memory freed at %p\n", memgrind_arr[i]);           // printing free statement
         } 
     } 
-    memClean();
+    // memClean();
 }
 
 
@@ -77,18 +77,30 @@ void test3() {
         printf("memory deallocated at index %d: pointer to address %p\n", i, memgrind_arr[allocated_count]);
     }
 
-    memClean();
+    // memClean();
 }
 
 
 
 
 
-int main1(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
 
+    struct timeval stop, start;
+    gettimeofday(&start, NULL);
     test1();
-    // test2();
-    // test3();
+    gettimeofday(&stop, NULL);
+    printf("test 1 took %lu us\n", (stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec); 
+        
+    gettimeofday(&start, NULL);
+    test2();
+    gettimeofday(&stop, NULL);
+    printf("test 2 took %lu us\n", (stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec);
+
+    gettimeofday(&start, NULL);
+    test3();
+    gettimeofday(&stop, NULL);
+    printf("test 3 took %lu us\n", (stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec);
 
     return 0;
 }
