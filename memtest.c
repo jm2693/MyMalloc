@@ -9,36 +9,34 @@
 
 
 
-void test1() {                                          // what happens if you malloc to the same location twice? and try to free it twice? should fail on both counts
-    void* ptr = malloc(1);                              // mallocs 1 byte (really 8) to ptr
+
+void testA() {
+    void* ptr = malloc(1);
     printf("memory allocated at %p\n", ptr); 
-    ptr = malloc(3);                                    // mallocs 3 bytes (really 8) also to ptr
+    ptr = malloc(3);
     printf("memory allocated at %p\n", ptr); 
-    free(ptr);                                          // tries to free twice
+    free(ptr);
     if (DEBUG) {
-        printf("memory freed at %p\n", ptr);            // printing free statement
+        printf("memory freed at %p\n", ptr);           // printing free statement
     } 
     free(ptr);
     if (DEBUG) {
-        printf("memory freed at %p\n", ptr);            // printing free statement
+        printf("memory freed at %p\n", ptr);           // printing free statement
     } 
 }
 
-
-void test2() {                                          // trying to allocate more memory than possible. should fail
+void testB() {
     void *memgrind_arr[2];
-    memgrind_arr[0] = malloc(4099);                     // trys to allocate a memory that's too large, return error 
-    free(memgrind_arr[0]);                              // trys to free, should return error as it was not put into memory
+    memgrind_arr[0] = malloc(4099);                                     // trys to allocate a memory that's too large, return error 
+    free(memgrind_arr[0]);                                              // trys to free, should return error as it was not put into memory
 }
 
-
-void test3(){
+void testC(){
     void* ptr = malloc(0);
-    free(ptr);                                          // trys to free, should return error as it was not put into memory
+    free(ptr);                                      // trys to free, should return error as it was not put into memory
 }
 
-
-void test4(){
+void testD(){
     void *memgrind_arr[10];
     for(int i = 0; i < 4; i++){
         memgrind_arr[i] = malloc(1000);
@@ -48,16 +46,31 @@ void test4(){
     }
     free(memgrind_arr[0]);
     if (DEBUG) {
-            printf("memory freed at %p\n", memgrind_arr[0]);           // printing malloc statement
+            printf("memory freed at %p\n", memgrind_arr[0]);       // printing malloc statement
         } 
     free(memgrind_arr[2]);
     if (DEBUG) {
-            printf("memory freed at %p\n", memgrind_arr[2]);           // printing malloc statement
+            printf("memory freed at %p\n", memgrind_arr[2]);       // printing malloc statement
         } 
-    memgrind_arr[3] = malloc(2000);                                    // should fail
+    memgrind_arr[3] = malloc(2000);                                     // should fail
 }
 
+void testE() {
+    int *p = malloc(sizeof(int)*2);
+    free(p + 1);
+}
 
+void testF() {
+    int *p = malloc(sizeof(int)*100);
+    int *q = p;
+    free(p);
+    free(q);
+}
+
+void testG() {
+    int x;
+    free(&x);
+}
 
 
 
