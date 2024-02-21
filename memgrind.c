@@ -68,6 +68,20 @@ void test3() {
     }
 }
 
+void test4(){
+    char* ptr1 = (char*)malloc(16);
+    char* ptr2 = (char*)malloc(16);
+    char* ptr3 = (char*)malloc(16);
+
+    free(ptr2);
+    free(ptr1);
+
+    char* ptr4 = (char*)malloc(32);
+
+    if(ptr4 != NULL && ptr4 >= ptr1 && ptr4 < ptr3) printf("allocated in correct spot");
+    else printf("failed to allocate correctly");
+
+}
 
 
 int main(int argc, char* argv[]) {
