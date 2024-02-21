@@ -70,7 +70,7 @@ void *mymalloc(size_t size, char* file, int line) {
             init_next_chunk(curr_header, MEMLENGTH*(sizeof(double)) - (size + sizeof(metadata)));   // calls helper method to find and create next chunk, including space left and if in use (by default not)
             return (void *)payload_ptr;                                                             // returns the ptr to the payload to the client
         }
-        if(chunk.size >= size + sizeof(metadata) && chunk.use == 0) {                               // checks if chunk has enough space and is free
+        if(chunk.size >= size + sizeof(metadata) && chunk.use == 0){                                // checks if chunk has enough space and is free
             if(DEBUG) printf("you've gotten here alloc step 4");                                    // for debugging 
             assign_header(curr_header, size + sizeof(metadata));                                    // sets requested values to current header
             payload_ptr = start_ptr + 1;                                                            // payload will be one metadata space away from the current position being scanned, hence, start_ptr + 1
@@ -158,4 +158,18 @@ void myfree(void* ptr, char* file, int line) {
     }
     if(DEBUG) printf("you've gotten here step 10");
     printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
+}
+
+int memClean() {
+    metadata chunk;
+    metadata *start_ptr = (metadata *)memory;
+    int *curr_header = (int *)start_ptr; 
+    chunk.size = curr_header[0];
+    chunk.use  = curr_header[1];
+
+    if ((chunk.size == 0 && chunk.use == 0) || (chunk.size == MEMLENGTH * sizeof(metadata) && chunk.use == 0)) {
+        return 1;
+    }
+
+    return 0;
 }
