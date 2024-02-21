@@ -8,21 +8,22 @@
 #endif
 
 void test1() {
-    void *memgrind_arr[120];                                           // a test array used to store pointers to allocated memory
-    for (int i = 0; i < 120; i++) {                                      // will repeat 120 times
+    void *memgrind_arr[120];                                            // a test array used to store pointers to allocated memory
+    for (int i = 0; i < 120; i++) {                                     // will repeat 120 times
         memgrind_arr[i] = malloc(1);                                    // allocating malloc at a position in memgrind_arr for testing
         if (DEBUG) {
-            printf("memory allocated at %p\n", memgrind_arr[i]);       // printing malloc statement
+            printf("memory allocated at %p\n", memgrind_arr[i]);        // printing malloc statement
         } 
         free(memgrind_arr[i]);                                          // freeing allocated memory
         if (DEBUG) {
-            printf("memory freed at %p\n", memgrind_arr[i]);           // printing free statement
+            printf("memory freed at %p\n", memgrind_arr[i]);            // printing free statement
         }                       
     }
     memgrind_arr[18] = malloc(1000);                                    // should be able to be allocated 
     printf("memory allocated at %p\n", memgrind_arr[18]);
     free(memgrind_arr[18]);
-    printf("memory freed at %p\n", memgrind_arr[18]);           // printing free statement
+    printf("memory freed at %p\n", memgrind_arr[18]);                   // printing free statement
+    memClean();
 }
 
 void test2() {
@@ -40,16 +41,17 @@ void test2() {
             printf("memory freed at %p\n", memgrind_arr[i]);           // printing free statement
         } 
     } 
+    memClean();
 }
 
 
 void test3() {
     void* memgrind_arr[120];
     int allocated_count = 0;
-    srand(time(NULL)); // Seed for random number generator
+    srand(time(NULL));                  // Seed for random number generator
 
     while (allocated_count < 120) {
-        int choice = rand() % 2; // Random choice between 0 and 1
+        int choice = rand() % 2;        // Random choice between 0 and 1
 
         if (choice == 0) {
             // Allocate a 1-byte object and add the pointer to the array
@@ -74,6 +76,8 @@ void test3() {
         free(memgrind_arr[i]);
         printf("memory deallocated at index %d: pointer to address %p\n", i, memgrind_arr[allocated_count]);
     }
+
+    memClean();
 }
 
 
