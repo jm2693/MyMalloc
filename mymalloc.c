@@ -120,8 +120,8 @@ void myfree(void* ptr, char* file, int line) {
                 return;
             }
             int *next_chunk = find_next_chunk(curr_header);                                         // set nextChunk to point to the next chunk of currentChunk
-            if(next_chunk != NULL && next_chunk[1] == 0) {
-                merge_chunks((int *)start_ptr, next_chunk);
+            if(next_chunk != NULL && next_chunk[1] == 0) {                                          // checks to see if the current and previous chunks are in use
+                merge_chunks((int *)start_ptr, next_chunk);                                         // coalesces free adjacent chunks
             }
             merge_chunks((int *)start_ptr, (int *)((char *)ptr - sizeof(metadata)));                // merge
             ptr = NULL;                                                                             // fully deallocates the pointer
@@ -145,8 +145,8 @@ void myfree(void* ptr, char* file, int line) {
             ptr = NULL;
             return;
         }
-        start_ptr = (char *)find_next_chunk((int *)start_ptr);
-        if(start_ptr == NULL) {
+        start_ptr = (char *)find_next_chunk((int *)start_ptr);                                      // next few lines checks for if the next chunk is null (end of memory 
+        if(start_ptr == NULL) {                                                                     // or looped through all allocations)
             if(DEBUG) printf("you've gotten here step 8");
             break;
         }
