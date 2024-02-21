@@ -69,17 +69,22 @@ void test3() {
 }
 
 void test4(){
-    char* ptr1 = (char*)malloc(16);
-    char* ptr2 = (char*)malloc(16);
-    char* ptr3 = (char*)malloc(16);
+    for (int i = 0; i < 120; i++) {
+    char* ptr1 = (char*)malloc(16);                     // allocating 16 byte chunk (total 24)
+    char* ptr2 = (char*)malloc(16);                     // allocating 16 byte chunk (total 24)
+    char* ptr3 = (char*)malloc(16);                     // allocating 16 byte chunk (total 24)
 
-    free(ptr2);
-    free(ptr1);
+    free(ptr2);                                         // freeing 2nd chunk
+    free(ptr1);                                         // freeing 1st. Should coalece 
 
-    char* ptr4 = (char*)malloc(32);
+    char* ptr4 = (char*)malloc(32);                     // should allocate before ptr3
 
-    if(ptr4 != NULL && ptr4 >= ptr1 && ptr4 < ptr3) printf("allocated in correct spot");
-    else printf("failed to allocate correctly");
+    if(ptr4 != NULL && ptr4 >= ptr1 && ptr4 < ptr3) printf("allocated in correct spot ");
+    else printf("failed to allocate correctly ");
+
+    free(ptr3);                                         // frees remaining
+    free(ptr4);                                         // frees remaining
+    }
 
 }
 
@@ -100,28 +105,41 @@ int main(int argc, char* argv[]) {
     // printf("test 1 took %.2f ms\n", elapsed_time_ms/50); 
     // elapsed_time_ms = 0;
 
-    // // gettimeofday(&start, NULL);
-    // // for (int i = 0; i < 50; i++) {
+    // gettimeofday(&start, NULL);
+    // for (int i = 0; i < 50; i++) {
 
-    // // test2();
+    // test2();
     
-    // // }
-    // // gettimeofday(&stop, NULL);
-    // // elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
-    // // elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
-    // // printf("test 2 took %.2f ms\n", elapsed_time_ms/50); 
-    // // elapsed_time_ms = 0;
+    // }
+    // gettimeofday(&stop, NULL);
+    // elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
+    // elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
+    // printf("test 2 took %.2f ms\n", elapsed_time_ms/50); 
+    // elapsed_time_ms = 0;
+
+    // gettimeofday(&start, NULL);
+    // for (int i = 0; i < 50; i++) {
+
+    // test3();
+    
+    // }
+    // gettimeofday(&stop, NULL);
+    // elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
+    // elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
+    // printf("test 3 took %.2f ms\n", elapsed_time_ms/50); 
+    // elapsed_time_ms = 0;
+
 
     gettimeofday(&start, NULL);
     for (int i = 0; i < 50; i++) {
 
-    test3();
+    test4();
     
     }
     gettimeofday(&stop, NULL);
     elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
     elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
-    printf("test 3 took %.2f ms\n", elapsed_time_ms/50); 
+    printf("test 4 took %.2f ms\n", elapsed_time_ms/50); 
     elapsed_time_ms = 0;
 
     return 0;

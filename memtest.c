@@ -75,29 +75,27 @@ void testF() {
 void testG() {
     int x;
     free(&x);
-    
+}
+
+void testH() {
+    void *memtest_arr[2];
+    memtest_arr[0] = malloc(-1);
+    free(memtest_arr[0]);
 }
 
 
 
 int _main(int argc, char* argv[]) {
 
-    // testA();
-    // testB();
-    // testC();
-    // testD();
-    // testE();
-    // testA();
-    // testB();
-    // testC();
-    // testD();
-    // testE();
-    // testF();
-     testG();
+    testA();
+    testB();
+    testC();
+    testD();
+    testE();
+    testF();
+    testG();
+    testH();
 
-    // for (int i = 0; i < 50; i++) {
-    //     // test6();
-    //     //test3();
-    // }
+
     return 0;
 }

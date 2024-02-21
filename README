@@ -7,6 +7,8 @@ Malloc should:
 - should not allocate more when full
 - should allocate without overlapping
 - should only allocate specified size
+- should not allocate invalid sizes (0, -numbers, numbers>MEMLENGTH-sizeof(metadata))
+- should return pointer to payload
 
 Free should:
 - should only free specified chunk
@@ -15,7 +17,8 @@ Free should:
     - rids of previous headers 
     - merge adjacent chunks to fill gaps to allow for bigger memory allocations 
     - registers now empty spaces as free space
-- should deal with memory fragmentation // maybe not?
+- should not deal with memory fragmentation 
+- should only free valid inputs (must be allocated and at beginning of header)
 
 Malloc checks:
 - Allocate something that is larger than memory array                               //expect error
@@ -55,24 +58,32 @@ Official memgrind test cases:
 test1():
  - allocates 1 byte 120 times and immediately deallocates it before the next allocation
  - after that it should be able to allocate a large chunk as the memory should be free
- - avg time: 1.72 ms 
+ - our avg time: 1.72 ms 
  - real malloc avg time: 0.92 ms
 
 test2():
  - allocates 1 byte 120 times and deallocates all the allocated bytes after all of them have been allocated 
  - after that it should be able to allocate a large chunk as the memory should be free
- - avg time: 1.08 ms
- real malloc avg time: 1.31 ms
+ - our avg time: 1.08 ms
+ - real malloc avg time: 1.31 ms
 
 test3():
 - creates an array of 120 pointers. randomly allocates or deallocates 1 byte. continues, until there 
- - avg time: 1.50 ms
+ - our avg time: 1.50 ms
  - real malloc avg time: 1.18 ms
+
+ test4():
+- stress tests the coalecing aspect of mymalloc. allocates 3 pointers, frees the first and second. 
+- allocates a fourth that should be placed before the third as its size permits.
+ - our avg time: 0.38 ms
+ - real malloc avg time: 0.37 ms
+
 
 // avg time is calculated based on running each test 50 times \\
 
 Notes:
-Something very interesting we found was 
+- Something very interesting we found was the time difference between mymalloc and the real malloc. We expected malloc to be consistently
+    - faster than our version. However, in some cases, 
 
 Official memtest tets cases:
 
