@@ -82,21 +82,21 @@ test3():
  test5():
  - allocate 1000 byte chunks 4 times, frees 1st and 3rd. next try to allocate 2000 bytes, which should fail as we do 
     - not coalesce the 1st and 3rd empty chunks as they are memory fragmentations.
- - our avg time: 
- - real malloc avg time: 
+ - our avg time: 0.02 ms
+ - real malloc avg time: 0.03 ms
 
 
 // avg time is calculated based on running each test 50 times \\
 
 Notes:
 - Something very interesting we found was the time difference between mymalloc and the real malloc. We expected malloc to be consistently
-    - faster than our version, like test1. However, in some cases, namely, 3 and 4, the times were decently close. 
+    - faster than our version, like test1. However, in some cases, namely, 3, 4 and 5, the times were decently close. 
     - Surprisingly, our test2 was faster than the real malloc. Perhaps this may have to contribute with malloc not being optimized
     - for allocated so many small and continuous bytes, repeatedly. The real malloc also failed to pass our test4, which was 
     - very surprising!
 - Our memtest.c file includes a main file labeled int _main(int argc, char* argv[]), as to not confuse the makefile. 
 
-Official memtest tets cases:
+Official memtest test cases:
 
 testA():
  - try to malloc in same location twice
