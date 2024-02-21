@@ -112,4 +112,16 @@ testC():
  - should fail
  - try to free the failed allocation
  - should fail
+ testE(): 
+ - allocates 100 ints
+ - assign q to p 
+ - free both of them
+ - should fail 
+ testF():
+ - free an address of an int that was not initialized in malloc
+ - should fail
+ testG: 
+ - allocate a negative number
+ - try to free it 
+ - should fail allocating it (invalid number) and should fail to free as it wasn't allocated
 
