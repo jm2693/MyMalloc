@@ -10,17 +10,16 @@ static double memory[MEMLENGTH];
 typedef struct metadata{
     int size;                           // size of memory chunk (including header)
     int use;                            // flag to see if chunk is allocated (1 - allocated, 0 - not allocated)
-    //struct metadata *next;            // pointer to the next available free space  (not going with this method because increases memory usage by a lot and not necessary for small data sizes)
 } metadata;
 
 size_t align(size_t size) {                 // method to align everything as 8-byte aligned
     return (size+7) & ~7;                   // uses addition and bitwise and to round up to nearest multiple of 8
 }
 
-void *find_next_chunk(int* current) {                                                       // takes current beginning of chunk and 
-    int* nextChunk = (int *)(current + current[0]/sizeof(int));
-    if(nextChunk <= (int *)(&memory[MEMLENGTH - (sizeof(metadata)/sizeof(double))])) {
-        return (void *)nextChunk;
+void *find_next_chunk(int* current) {                                                        // takes current beginning of chunk as an int ptr to parse through the int data within the struct
+    int* next_chunk = (int *)(current + current[0]/sizeof(int));                             // the next space in memory will be the current chunk + the size of the chunk itself (metadata+payload)
+    if(next_chunk <= (int *)(&memory[MEMLENGTH - (sizeof(metadata)/sizeof(double))])) {      // as long as next_chunk is wthin memory it returns next chunk
+        return (void *)next_chunk;
     } 
     return NULL;
 }
@@ -34,14 +33,14 @@ void init_next_chunk(int* curr_header, size_t size) {       // takes ptr to curr
 }
 
 void assign_header(int* current_headerstart, size_t size) {     // used to set the data within the next header 
-    current_headerstart[0] = size;                              // 
-    current_headerstart[1] = 1;
+    current_headerstart[0] = size;                              // sets the size of header
+    current_headerstart[1] = 1;                                 // sets use to 1 (allocated)
 }
 
-void merge_chunks(int* current_chunk, int* next_chunk) {
-    current_chunk[0] = current_chunk[0] + next_chunk[0];
-    next_chunk[0] = 0;
-    next_chunk[1] = 0;
+void merge_chunks(int* current_chunk, int* next_chunk) {        // takes int ptr arguments of current and next chunk
+    current_chunk[0] = current_chunk[0] + next_chunk[0];        // sets the size of the first chunk to the first + second
+    next_chunk[0] = 0;                                          // sets next chunk size to 0 
+    next_chunk[1] = 0;                                          // sets use to 0 (deallocated)
 }
 
 void *mymalloc(size_t size, char* file, int line) {
@@ -97,65 +96,61 @@ void *mymalloc(size_t size, char* file, int line) {
 
 
 void myfree(void* ptr, char* file, int line) {
-    if (ptr == NULL || ptr < (void*)memory || ptr >= (void*)&memory[MEMLENGTH]) {
-        printf("Error at %s:%d: Trying to free a null pointer\n", file, line);
+    if (ptr == NULL || ptr < (void*)memory || ptr >= (void*)&memory[MEMLENGTH]) {                   // checks for invalid cases
+        printf("Error at %s:%d: Trying to free a null pointer\n", file, line);                      // error statement
         return;
     }
-    if (ptr == NULL) {
-        printf("Error at %s:%d: Trying to free a null pointer\n", file, line);
-        return;
-    }
-    char *start_ptr = (char *)memory;
-    if(DEBUG) printf("what is this %p\n", start_ptr);
-    if(DEBUG) printf("you've gotten here step 1");
-    metadata chunk;
+    char *start_ptr = (char *)memory;                                                               // casts pointers as char to read memory at byte level
+    if(DEBUG) printf("address of start_ptr: %p\n", start_ptr);                                               // for debugging
+    if(DEBUG) printf("you've gotten here step 1");                                                  // for debugging
+    metadata chunk;                                                                                 
 
-    while(start_ptr <= (char*)&memory[MEMLENGTH-(sizeof(metadata)/sizeof(double))]) {
-        if(DEBUG) printf("you've gotten here step 2");
-        int *curr_header = (int *)start_ptr;
-        chunk.size = curr_header[0];
-        chunk.use = curr_header[1];
-        if(chunk.use == 0 && (start_ptr + chunk.size + sizeof(metadata)) == ptr) {
-            if(DEBUG) printf("you've gotten here step 3");
-            int *curr_chunk = (int *)ptr - 8/sizeof(int);
-            if(curr_chunk[1] == 0) {
-                if(DEBUG) printf("you've gotten here step 4");
-                printf("Error at %s:%d: Freed this memory already :(\n", file, line);  
-                return;
+    while(start_ptr <= (char*)&memory[MEMLENGTH-(sizeof(metadata)/sizeof(double))]) {               // scans through array. same method as mymalloc()
+        if(DEBUG) printf("you've gotten here step 2");                                              // debugging
+        int *curr_header = (int *)start_ptr;                                                        // int* to change values within metadata 
+        chunk.size = curr_header[0];                                                                // sets size to 0
+        chunk.use = curr_header[1];                                                                 // sets use to 0 
+        if(chunk.use == 0 && (start_ptr + chunk.size + sizeof(metadata)) == ptr) {                  // checks for if the data is allocated and if address is the same as pointer (mainly first instance)
+            if(DEBUG) printf("you've gotten here step 3");                                          // for debugging
+            int *curr_chunk = (int *)ptr - sizeof(metadata)/sizeof(int);                            // points to metadata of chunk being deallocated
+            if(curr_chunk[1] == 0) {                                                                // checks if use is 0 (deallocated)
+                if(DEBUG) printf("you've gotten here step 4");                                      // for debugging
+                printf("Error at %s:%d: Freed this memory already :(\n", file, line);               // error statement
+                return;                                                                             
             }
-            int *next_chunk = find_next_chunk(curr_header);
-            if(next_chunk != NULL && next_chunk[1] == 0) {
-                merge_chunks((int *)start_ptr, next_chunk);
+            int *next_chunk = find_next_chunk(curr_header);                                         // set nextChunk to point to the next chunk of currentChunk
+            if(next_chunk != NULL && next_chunk[1] == 0) {                                          // checks to see if the current and previous chunks are in use
+                merge_chunks((int *)start_ptr, next_chunk);                                         // coalesces free adjacent chunks
             }
-            merge_chunks((int *)start_ptr, (int *)((char *)ptr - sizeof(metadata)));
-            ptr = NULL;
+            merge_chunks((int *)start_ptr, (int *)((char *)ptr - sizeof(metadata)));                // merge
+            ptr = NULL;                                                                             // fully deallocates the pointer
             return;
         }
 
-        if ((start_ptr + sizeof(metadata)) == (char *)ptr) {
-            if(DEBUG) printf("you've gotten here step 5");
-            int *curr_chunk = (int *)ptr - sizeof(metadata)/sizeof(int);
+        if ((start_ptr + sizeof(metadata)) == (char *)ptr) {                                        // checks for if the data is allocated and if address is the same as pointer 
+            if(DEBUG) printf("you've gotten here step 5");                                          // for debugging
+            int *curr_chunk = (int *)ptr - sizeof(metadata)/sizeof(int);                            // points to metadata of chunk being deallocated
             if(curr_chunk[1] == 0) {
-                if(DEBUG) printf("you've gotten here step 6");
+                if(DEBUG) printf("you've gotten here step 6");                                      // for debugging
                 printf("Error at %s:%d: Freed this memory already :(\n", file, line); 
                 return;
             }
-            int *nextChunk = find_next_chunk(curr_chunk);
+            int *nextChunk = find_next_chunk(curr_chunk);                                           // looks for chunk to see if use is set to 0
             if(nextChunk != NULL && nextChunk[1] == 0) {
-                if(DEBUG) printf("you've gotten here step 7");
-                merge_chunks((int *)start_ptr, nextChunk);
+                if(DEBUG) printf("you've gotten here step 7");                                      // for debugging
+                merge_chunks((int *)start_ptr, nextChunk);                                          // if yes, it merges
             }
             curr_chunk[1] = 0;
             ptr = NULL;
             return;
         }
-        start_ptr = (char *)find_next_chunk((int *)start_ptr);
-        if(start_ptr == NULL) {
-            if(DEBUG) printf("you've gotten here step 8");
+        start_ptr = (char *)find_next_chunk((int *)start_ptr);                                      // next few lines checks for if the next chunk is null (end of memory 
+        if(start_ptr == NULL) {                                                                     // or looped through all allocations)
+            if(DEBUG) printf("you've gotten here step 8");                                          // for debugging
             break;
         }
-        if(DEBUG) printf("you've gotten here step 9");
-    }
-    if(DEBUG) printf("you've gotten here step 10");
-    printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
+        if(DEBUG) printf("you've gotten here step 9");                                              // for debugging
+    }   
+    if(DEBUG) printf("you've gotten here step 10");                                                 // for debugging
+    printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);                    // thank you for reading through our code
 }

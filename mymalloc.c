@@ -101,6 +101,10 @@ void myfree(void* ptr, char* file, int line) {
         printf("Error at %s:%d: Trying to free a null pointer\n", file, line);
         return;
     }
+    if (ptr == NULL) {
+        printf("Error at %s:%d: Trying to free a null pointer\n", file, line);
+        return;
+    }
     char *start_ptr = (char *)memory;                                                               // casts pointers as char to read memory at byte level
     if(DEBUG) printf("what is this %p\n", start_ptr);
     if(DEBUG) printf("you've gotten here step 1");
