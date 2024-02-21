@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
-//#include "mymalloc.h"
+#include "mymalloc.h"
 #ifndef DEBUG
 #define DEBUG 1
 #endif
@@ -48,7 +48,7 @@ void test3() {
     int allocated[120] = {0};               // initialize the memory allocation array
     int allocated_count = 0;                // both index and count
 
-    while (allocated_count < 120) {
+    for(int i = 0; i < 120; i++) {
         if(allocated_count == 0 || (rand() % 2 == 0 && allocated_count < 120)) {    // allocate 1 byte of memory and store the address if rand says 0
             printf("memory allocated at index=%d: pointer to memory at %p\n", allocated_count, memgrind_arr[allocated_count]);
             memgrind_arr[allocated_count] = malloc(1);
@@ -62,7 +62,9 @@ void test3() {
         }
     }
     for (int i = 0; i < 120; i++) {
+        if (allocated[i] == 1){
         free(memgrind_arr[i]);
+        }
     }
 }
 
@@ -84,17 +86,17 @@ int main(int argc, char* argv[]) {
     // printf("test 1 took %.2f ms\n", elapsed_time_ms/50); 
     // elapsed_time_ms = 0;
 
-    // gettimeofday(&start, NULL);
-    // for (int i = 0; i < 50; i++) {
+    // // gettimeofday(&start, NULL);
+    // // for (int i = 0; i < 50; i++) {
 
-    // test2();
+    // // test2();
     
-    // }
-    // gettimeofday(&stop, NULL);
-    // elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
-    // elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
-    // printf("test 2 took %.2f ms\n", elapsed_time_ms/50); 
-    // elapsed_time_ms = 0;
+    // // }
+    // // gettimeofday(&stop, NULL);
+    // // elapsed_time_ms = (stop.tv_sec - start.tv_sec) * 1000.0; // seconds to milliseconds
+    // // elapsed_time_ms += (stop.tv_usec - start.tv_usec) / 1000.0; // microseconds to milliseconds
+    // // printf("test 2 took %.2f ms\n", elapsed_time_ms/50); 
+    // // elapsed_time_ms = 0;
 
     gettimeofday(&start, NULL);
     for (int i = 0; i < 50; i++) {

@@ -56,15 +56,18 @@ test1():
  - allocates 1 byte 120 times and immediately deallocates it before the next allocation
  - after that it should be able to allocate a large chunk as the memory should be free
  - avg time: 1.72 ms 
- - real malloc avg time: 
+ - real malloc avg time: 0.92 ms
+
 test2():
  - allocates 1 byte 120 times and deallocates all the allocated bytes after all of them have been allocated 
  - after that it should be able to allocate a large chunk as the memory should be free
  - avg time: 1.08 ms
- real malloc avg time:
+ real malloc avg time: 1.31 ms
+
 test3():
- - avg time: 168.26 ms
- - real malloc avg time: 202.00 ms
+- creates an array of 120 pointers. randomly allocates or deallocates 1 byte. continues, until there 
+ - avg time: 1.50 ms
+ - real malloc avg time: 1.18 ms
 
 // avg time is calculated based on running each test 50 times \\
 
