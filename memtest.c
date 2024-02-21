@@ -23,20 +23,19 @@ void testA() {
     if (DEBUG) {
         printf("memory freed at %p\n", ptr);           // printing free statement
     } 
-    // memClean();
+    
 }
 
 void testB() {
     void *memgrind_arr[2];
     memgrind_arr[0] = malloc(4099);                                     // trys to allocate a memory that's too large, return error 
     free(memgrind_arr[0]);                                              // trys to free, should return error as it was not put into memory
-    // memClean();
 }
 
 void testC(){
     void* ptr = malloc(0);
     free(ptr);                                      // trys to free, should return error as it was not put into memory
-    // memClean();
+    
 }
 
 void testD(){
@@ -56,13 +55,13 @@ void testD(){
             printf("memory freed at %p\n", memgrind_arr[2]);       // printing malloc statement
         } 
     memgrind_arr[3] = malloc(2000);                                     // should fail
-    // memClean();
+    
 }
 
 void testE() {
     int *p = malloc(sizeof(int)*2);
     free(p + 1);
-    // memClean();
+    
 }
 
 void testF() {
@@ -70,13 +69,13 @@ void testF() {
     int *q = p;
     free(p);
     free(q);
-    // memClean();
+    
 }
 
 void testG() {
     int x;
     free(&x);
-    // memClean();
+    
 }
 
 
