@@ -64,16 +64,6 @@ void test3() {
         }
     }
 }
-    // Deallocate any remaining objects
-    for (int i = 0; i < allocated_count; ++i) {
-        free(memgrind_arr[i]);
-        printf("memory deallocated at index %d: pointer to address %p\n", i, memgrind_arr[allocated_count]);
-    }
-
-    // memClean();
-}
-
-
 
 
 
