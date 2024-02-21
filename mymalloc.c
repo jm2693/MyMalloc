@@ -155,3 +155,15 @@ void myfree(void* ptr, char* file, int line) {
     if(DEBUG) printf("you've gotten here step 10");
     printf("Error at %s:%d: This pointer was not initialized :(\n", file, line);
 }
+
+int memClean() {
+    int *header = (int *)memory;
+    int chunkSize = header[0];
+    int allocated = header[1];
+
+    if ((chunkSize == 0 && allocated == 0) || (chunkSize == MEMLENGTH * sizeof(metadata) && allocated == 0)) {
+        return 1;
+    }
+
+    return 0;
+}
