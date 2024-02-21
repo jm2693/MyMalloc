@@ -7,8 +7,11 @@
 #define DEBUG 1
 #endif
 
-
-
+//memtest.c example defintions
+#define MEMSIZE 4096
+#define HEADERSIZE 8
+#define OBJECTS 64
+#define OBJSIZE (MEMSIZE / OBJECTS - HEADERSIZE)
 
 void testA() {
     void* ptr = malloc(1);
@@ -96,6 +99,32 @@ int _main(int argc, char* argv[]) {
     testG();
     testH();
 
+    //memtest.c example
+    char *obj[OBJECTS];
+	int i, j, errors = 0;
+	
+	// fill memory with objects
+	for (i = 0; i < OBJECTS; i++) {
+		obj[i] = malloc(OBJSIZE);
+	}
+	
+	// fill each object with distinct bytes
+	for (i = 0; i < OBJECTS; i++) {
+		memset(obj[i], i, OBJSIZE);
+	}
+	
+	// check that all objects contain the correct bytes
+	for (i = 0; i < OBJECTS; i++) {
+		for (j = 0; j < OBJSIZE; j++) {
+			if (obj[i][j] != i) {
+				errors++;
+				printf("Object %d byte %d incorrect: %d\n", i, j, obj[i][j]);
+			}
+		}
+	}
+	printf("%d incorrect bytes\n", errors);
+	
+	return EXIT_SUCCESS;
 
     return 0;
 }
