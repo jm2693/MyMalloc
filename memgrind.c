@@ -46,31 +46,24 @@ void test2() {
 
 
 void test3() {
-    void* memgrind_arr[120];
-    int allocated_count = 0;
-    srand(time(NULL));                  // Seed for random number generator
+    char *memgrind_arr[120];                // array to store 120 pointers
+    int allocated[120] = {0};               // initialize the memory allocation array
+    int allocated_count = 0;                // both index and count
 
     while (allocated_count < 120) {
-        int choice = rand() % 2;        // Random choice between 0 and 1
-
-        if (choice == 0) {
-            // Allocate a 1-byte object and add the pointer to the array
+        if(allocated_count == 0 || (rand() % 2 == 0 && allocated_count < 120)) {    // allocate 1 byte of memory and store the address if rand says 0
+            printf("memory allocated at index=%d: pointer to memory at %p\n", allocated_count, memgrind_arr[allocated_count]);
             memgrind_arr[allocated_count] = malloc(1);
-            if (memgrind_arr[allocated_count] == NULL) {
-                fprintf(stderr, "memory allocation failed\n");
-                break;
-            }
-            printf("memory allocated at index %d: pointer to address %p\n", allocated_count, memgrind_arr[allocated_count]);
-            allocated_count++;
-        } else if (choice == 1 && allocated_count > 0) {
-            // Deallocate a previously allocated object
-            free(memgrind_arr[allocated_count - 1]);
-            memgrind_arr[allocated_count - 1] = NULL;
-            printf("memory deallocated at index %d: pointer to address %p\n", allocated_count - 1, memgrind_arr[allocated_count-1]);
-            allocated_count--;
+            allocated[allocated_count] = 1;                                         // is allocated
+            allocated_count++;                                                      // increase by 1
+        } else {                                                                    // free the memory if rand says 1
+            allocated_count--;                                                      // decrease by 1
+            printf("memory freed at index=%d: pointer to memory at %p\n", allocated_count, memgrind_arr[allocated_count]);
+            free(memgrind_arr[allocated_count]);                                    
+            allocated[allocated_count] = 0;                                         // not allocated
         }
     }
-
+}
     // Deallocate any remaining objects
     for (int i = 0; i < allocated_count; ++i) {
         free(memgrind_arr[i]);
