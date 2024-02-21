@@ -81,6 +81,13 @@ int main(int argc, char* argv[]) {
     // testC();
     // testD();
     // testE();
+    // testA();
+    // testB();
+    // testC();
+    // testD();
+    // testE();
+    // testF();
+    // testG();
 
     // for (int i = 0; i < 50; i++) {
     //     // test6();
