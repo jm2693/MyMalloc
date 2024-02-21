@@ -40,18 +40,30 @@ Runtime Choices:
 
 Official memgrind test cases:
 
-test1():
+testA():
  - allocates 1 byte 120 times and immediately deallocates it before the next allocation
  - after that it should be able to allocate a large chunk as the memory should be free
-test2():
+testB():
  - allocates 1 byte 120 times and deallocates all the allocated bytes after all of them have been allocated 
  - after that it should be able to allocate a large chunk as the memory should be free
+testC():
+ - 
+test1():
+ - try to malloc in same location twice
+ - free it twice
+ - should fail
+test2():
+ - try to allocate a value bigger than memory
+ - should fail
+ - try to free the failed allocation
+ - should fail
 test3():
- - 
+ - try to allocate 0 bytes
+ - should fail
+ - try to free the failed allocation
+ - should fail
 test4():
- - try to allocate a size larger than memory, should give an error
- - try to free 
-test5():
- - 
-test6():
- - 
+ - allocate 1000 byte chunks 4 times 
+ - free 1st and third 
+ - try to allocate 2000 bytes
+ - should fail as we do not coalesce the 1st and third empty chunks
