@@ -101,7 +101,7 @@ void myfree(void* ptr, char* file, int line) {
         return;
     }
     char *start_ptr = (char *)memory;                                                               // casts pointers as char to read memory at byte level
-    if(DEBUG) printf("address of start_ptr: %p\n", start_ptr);                                               // for debugging
+    if(DEBUG) printf("address of start_ptr: %p\n", start_ptr);                                      // for debugging
     if(DEBUG) printf("you've gotten here step 1");                                                  // for debugging
     metadata chunk;                                                                                 
 
